@@ -1,1 +1,78 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
+[project]
+name = "natocr"
+version = "0.0.0"
+description = "Native OCR library using platform-specific frameworks (macOS Vision, Windows Runtime OCR)"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "alfredchiesa", email = "alfred.direct@icloud.com" }]
+maintainers = [{ name = "alfredchiesa", email = "alfred.direct@icloud.com" }]
+keywords = ["ocr", "text-recognition", "vision", "macos", "windows", "native"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.10"
+dependencies = ["Pillow>=9.0.0"]
+
+[project.optional-dependencies]
+macos = ["pyobjc-framework-Vision>=11.1", "pyobjc-framework-Quartz>=11.1"]
+windows = ["pywin32>=311"]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "python-semantic-release>=8.0.0",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.21",
+]
+
+[project.urls]
+Homepage = "https://github.com/alfredchiesa/natocr"
+Documentation = "https://alfredchiesa.github.io/natocr"
+Repository = "https://github.com/alfredchiesa/natocr.git"
+Issues = "https://github.com/alfredchiesa/natocr/issues"
+
+[project.scripts]
+natocr = "natocr.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["natocr*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["natocr"]
