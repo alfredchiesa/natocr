@@ -49,8 +49,8 @@ for element in result.elements:
 
 ### Confidence Scores
 
-> [!NOTE]
-> Confidence scores are only available on macOS.
+On macOS you can view the confidence score of the total detections or per 
+individual detection. This is not currently available on windows.
 
 ```python
 result = ocr.recognize("drivers-license.jpg")
