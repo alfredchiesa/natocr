@@ -27,7 +27,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 requires-python = ">=3.10"
-dependencies = ["Pillow>=9.0.0"]
+dependencies = ["Pillow>=9.0.0", "numpy>=1.21"]
 
 [project.optional-dependencies]
 macos = ["pyobjc-framework-Vision>=11.1", "pyobjc-framework-Quartz>=11.1"]
@@ -88,12 +88,8 @@ exclude_lines = [
 version_toml = ["pyproject.toml:project.version"]
 version_variables = ["natocr/__init__.py:__version__"]
 build_command = "pip3 install build && python3 -m build"
-upload_to_vcs_release = true
-upload_to_pypi = true
-upload_to_release = true
 hvcs = "github"
 major_on_zero = true
-tag_commit = true
 changelog_file = "CHANGELOG.md"
 commit_author = "semantic-release <semantic-release@example.com>"
 
