@@ -4,7 +4,7 @@ import natocr
 
 
 def test_version_exposed():
-    assert natocr.__version__ == "0.0.0"
+    assert natocr.__version__ == "1.3.2"
 
 
 def test_public_exports():
