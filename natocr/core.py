@@ -15,15 +15,29 @@ from .windows import WindowsOCR
 
 
 class OCR:
-    """main ocr class that delegates to platform-specific implementations"""
+    """Run OCR using the operating system's native engine.
+
+    Picks the right backend for the current platform - the Vision framework on
+    macOS, Windows Runtime OCR on Windows - and gives you one API over both.
+
+    Example:
+        ```python
+        from natocr import OCR
+
+        ocr = OCR()                       # english by default
+        result = ocr.recognize("invoice.png")
+        print(result.text)
+        ```
+
+    Args:
+        language: language code for text recognition (default: ``"en"``).
+
+    Raises:
+        RuntimeError: on an unsupported platform, or when the platform's native
+            OCR dependencies aren't installed.
+    """
 
     def __init__(self, language: str = "en"):
-        """
-        initialize ocr with specified language
-
-        args:
-            language: language code for text recognition (default: "en")
-        """
         self.language = language
         self._backend = None
         self._initialize_backend()
@@ -48,14 +62,19 @@ class OCR:
             raise RuntimeError(f"unsupported platform: {sys.platform}")
 
     def recognize(self, image: Union[str, Image.Image, np.ndarray, bytes]) -> OCRResult:
-        """
-        perform ocr on the provided image
+        """Recognize text in an image.
 
-        args:
-            image: image to process - can be file path, pil image, numpy array, or bytes
+        Args:
+            image: what to read. One of: a file path (``str``), a
+                ``PIL.Image.Image``, a ``numpy.ndarray``, or raw encoded image
+                ``bytes``.
 
-        returns:
-            OCRResult containing detected text and metadata
+        Returns:
+            An [OCRResult][natocr.OCRResult] with the detected text and
+            per-element metadata.
+
+        Raises:
+            ValueError: if ``image`` isn't one of the supported types.
         """
         # convert input to pil image for consistent processing
         pil_image = self._convert_to_pil(image)
@@ -84,10 +103,10 @@ class OCR:
 
     @property
     def supported_languages(self) -> List[str]:
-        """get list of supported languages for current platform"""
+        """Language codes the current platform's backend supports."""
         return self._backend.supported_languages if self._backend else []
 
     @property
     def platform(self) -> str:
-        """get current platform name"""
+        """The current platform identifier (e.g. ``"darwin"`` or ``"win32"``)."""
         return sys.platform

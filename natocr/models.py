@@ -8,7 +8,16 @@ from typing import List, Optional, Tuple
 
 @dataclass
 class BoundingBox:
-    """bounding box coordinates for detected text"""
+    """Pixel-space bounding box for a piece of detected text.
+
+    The origin is the top-left of the image, with ``y`` growing downward.
+
+    Attributes:
+        x: left edge, in pixels.
+        y: top edge, in pixels.
+        width: box width, in pixels.
+        height: box height, in pixels.
+    """
 
     x: float
     y: float
@@ -17,13 +26,20 @@ class BoundingBox:
 
     @property
     def bounds(self) -> Tuple[float, float, float, float]:
-        """return bounds as (x, y, width, height) tuple"""
+        """The box as an ``(x, y, width, height)`` tuple."""
         return (self.x, self.y, self.width, self.height)
 
 
 @dataclass
 class TextElement:
-    """individual text element with bounding box and confidence"""
+    """A single detected piece of text with its location.
+
+    Attributes:
+        text: the recognized string.
+        bounds: where it was found in the image.
+        confidence: recognition confidence in ``0.0..1.0``, or ``None`` when the
+            backend doesn't report one (Windows OCR doesn't).
+    """
 
     text: str
     bounds: BoundingBox
@@ -32,25 +48,37 @@ class TextElement:
 
 @dataclass
 class OCRResult:
-    """complete ocr result containing all detected text"""
+    """Everything an OCR pass found in one image.
+
+    Attributes:
+        text: all detected text joined into a single string.
+        confidence: average confidence across detections, or ``None`` if the
+            backend doesn't report confidence.
+        elements: per-detection breakdown with text, bounds, and confidence.
+    """
 
     text: str
     confidence: Optional[float] = None
     elements: List[TextElement] = None
 
     def __post_init__(self):
-        """initialize elements list if not provided"""
+        # default the mutable elements list when none was passed
         if self.elements is None:
             self.elements = []
 
     @property
     def words(self) -> List[TextElement]:
-        """get all word-level elements"""
+        """The elements that contain non-whitespace text."""
         return [elem for elem in self.elements if elem.text.strip()]
 
     @property
     def lines(self) -> List[str]:
-        """get text organized by lines (simplified)"""
+        """Detected text grouped into lines by vertical position.
+
+        Elements whose ``y`` are close together are treated as one line and
+        joined left-to-right. Falls back to ``[text]`` (or ``[]``) when there
+        are no elements.
+        """
         if not self.elements:
             return [self.text] if self.text else []
 
