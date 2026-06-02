@@ -8,8 +8,8 @@ version = "0.0.0"
 description = "Native OCR library using platform-specific frameworks (macOS Vision, Windows Runtime OCR)"
 readme = "README.md"
 license = { text = "MIT" }
-authors = [{ name = "alfredchiesa", email = "alfred.direct@icloud.com" }]
-maintainers = [{ name = "alfredchiesa", email = "alfred.direct@icloud.com" }]
+authors = [{ name = "alfredchiesa", email = "alfred.personal@icloud.com" }]
+maintainers = [{ name = "alfredchiesa", email = "alfred.personal@icloud.com" }]
 keywords = ["ocr", "text-recognition", "vision", "macos", "windows", "native"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -45,6 +45,7 @@ Homepage = "https://github.com/alfredchiesa/natocr"
 Documentation = "https://alfredchiesa.github.io/natocr"
 Repository = "https://github.com/alfredchiesa/natocr.git"
 Issues = "https://github.com/alfredchiesa/natocr/issues"
+Changelog = "https://github.com/alfredchiesa/natocr/blob/main/CHANGELOG.md"
 
 [project.scripts]
 natocr = "natocr.cli:main"
@@ -52,6 +53,72 @@ natocr = "natocr.cli:main"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["natocr*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=natocr",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+
+[tool.coverage.run]
+source = ["natocr"]
+omit = ["*/tests/*", "*/test_*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.semantic_release]
+version_toml = "pyproject.toml:project.version"
+build_command = "pip3 install build && python3 -m build"
+upload_to_vcs_release = true
+upload_to_pypi = true
+upload_to_release = true
+hvcs = "github"
+major_on_zero = true
+tag_commit = true
+changelog_file = "CHANGELOG.md"
+commit_author = "semantic-release <semantic-release@example.com>"
+
+[tool.semantic_release.changelog]
+template_dir = "templates"
+exclude_merge_commits = true
+exclude_commits = [
+    "chore:",
+    "docs:",
+    "style:",
+    "refactor:",
+    "perf:",
+    "test:",
+    "ci:",
+]
+
+[tool.semantic_release.branches.main]
+match = "(main|master)"
+prerelease = false
+
+[tool.semantic_release.branches.develop]
+match = "develop"
+prerelease = true
+prerelease_token = "beta"
 
 [tool.black]
 line-length = 88
