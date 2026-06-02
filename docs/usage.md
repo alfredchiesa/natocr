@@ -60,7 +60,69 @@ Pick a recognition language, and inspect what the current platform supports:
 ```python
 ocr = OCR(language="fr")
 print(ocr.platform)               # 'darwin' or 'win32'
-print(ocr.supported_languages)    # ['en', 'es', 'fr', ...]
+print(ocr.supported_languages)    # ['en-US', 'fr-FR', 'de-DE', ...]
+```
+
+## Supported languages
+
+The set of recognizable languages is decided by the OS, not by natocr, so the
+source of truth is always:
+
+```python
+OCR().supported_languages
+```
+
+It returns BCP-47 tags (e.g. `en-US`, `zh-Hans`) for whatever the current
+machine supports. If that live query ever fails, natocr falls back to a curated
+hardcoded set (`COMMON_LANGUAGES` in `natocr/macos.py` and `natocr/windows.py`),
+listed below.
+
+### macOS (Vision)
+
+Vision ships a fixed set per OS version, queried live from the framework. As of
+macOS 15, the accurate recognizer supports (this is also natocr's hardcoded
+`COMMON_LANGUAGES` fallback):
+
+| | | | |
+| --- | --- | --- | --- |
+| `en-US` English | `fr-FR` French | `it-IT` Italian | `de-DE` German |
+| `es-ES` Spanish | `pt-BR` Portuguese | `ru-RU` Russian | `uk-UA` Ukrainian |
+| `ko-KR` Korean | `ja-JP` Japanese | `zh-Hans` Chinese (Simplified) | `zh-Hant` Chinese (Traditional) |
+| `yue-Hans` Cantonese (Simplified) | `yue-Hant` Cantonese (Traditional) | `th-TH` Thai | `vi-VT` Vietnamese |
+| `ar-SA` Arabic | `ars-SA` Najdi Arabic | | |
+
+The exact list grows with newer macOS releases, so prefer the runtime query
+above over hard-coding it.
+
+### Windows (Windows Runtime OCR)
+
+Windows recognizes any language that has an **OCR language pack** installed, so
+the list is machine-specific. natocr's hardcoded `COMMON_LANGUAGES` fallback
+covers the common packs:
+
+| | | | |
+| --- | --- | --- | --- |
+| `en-US` English (US) | `en-GB` English (UK) | `fr-FR` French | `de-DE` German |
+| `es-ES` Spanish | `it-IT` Italian | `pt-BR` Portuguese | `nl-NL` Dutch |
+| `ru-RU` Russian | `ja-JP` Japanese | `ko-KR` Korean | `zh-Hans-CN` Chinese (Simplified) |
+| `zh-Hant-TW` Chinese (Traditional) | | | |
+
+List what's actually installed (Windows PowerShell):
+
+```powershell
+[Windows.Media.Ocr.OcrEngine]::AvailableRecognizerLanguages
+```
+
+See which packs are available, then install one (PowerShell as Administrator):
+
+```powershell
+# list all installable OCR packs
+Get-WindowsCapability -Online | Where-Object { $_.Name -like 'Language.OCR*' }
+
+# install, e.g. French
+Get-WindowsCapability -Online |
+  Where-Object { $_.Name -like 'Language.OCR*fr-FR*' } |
+  Add-WindowsCapability -Online
 ```
 
 ## Accepted inputs
@@ -143,4 +205,5 @@ and `coverage.xml`.
 | `tests/test_ocr.py` | the `OCR` facade and platform detection in `core.py` |
 | `tests/test_macos.py` | the macOS Vision backend (Vision mocked) |
 | `tests/test_windows.py` | the Windows Runtime backend (winrt mocked) |
+| `tests/test_integration_macos.py` | real Vision end-to-end (runs on macOS, skips elsewhere) |
 | `tests/test_package.py` | public exports and version |

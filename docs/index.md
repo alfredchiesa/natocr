@@ -12,8 +12,8 @@ or WinRT async plumbing.
 ## Install
 
 ```bash
-pip install natocr[macos]      # on macOS
-pip install natocr[windows]    # on Windows
+pip install natocr[macos]              # on macOS
+pip install natocr[windows]            # on Windows
 ```
 
 ## Quick start
@@ -21,7 +21,7 @@ pip install natocr[windows]    # on Windows
 ```python
 from natocr import OCR
 
-ocr = OCR()                    # defaults to english
+ocr = OCR()                            # defaults to english
 result = ocr.recognize("invoice.png")
 
 print(result.text)
@@ -29,6 +29,38 @@ print(result.text)
 
 ```text
 Invoice #1042 Total $58.20 Thank you!
+```
+
+### Bounding Boxes
+
+```python
+result = ocr.recognize("receipt.png")
+
+for element in result.elements:
+    box = element.bounds.bounds        # (x, y, width, height) in pixels
+    print(f"{element.text!r} @ {box} conf={element.confidence}")
+```
+
+```text
+'Acme Coffee' @ (24.0, 18.0, 180.0, 32.0) conf=0.97
+'Latte' @ (24.0, 70.0, 96.0, 28.0) conf=0.95
+'$4.50' @ (220.0, 70.0, 80.0, 28.0) conf=0.88
+```
+
+### Confidence Scores
+
+> [!NOTE]
+> Confidence scores are only available on macOS.
+
+```python
+result = ocr.recognize("drivers-license.jpg")
+
+# avg confidence, or None if unavailable
+print(f"Overall confidence: {result.confidence}")
+```
+
+```text
+Overall confidence: 0.93
 ```
 
 ## Next steps

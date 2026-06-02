@@ -70,8 +70,14 @@ supports:
 ```python
 ocr = OCR(language="fr")
 print(ocr.platform)               # 'darwin' or 'win32'
-print(ocr.supported_languages)    # ['en', 'es', 'fr', ...]
+print(ocr.supported_languages)    # ['en-US', 'fr-FR', 'de-DE', ...]
 ```
+
+The supported set is decided by the OS and queried live, so
+`supported_languages` always reflects the current machine. On macOS it's
+Vision's built-in set for your macOS version; on Windows it's whatever OCR
+language packs are installed. See the [Usage guide](https://alfredchiesa.github.io/natocr/usage/#supported-languages)
+for the full list and how to add Windows language packs.
 
 ### Alternative Inputs
 
@@ -118,7 +124,7 @@ In addition to file paths, `recognize()` accepts these in-memory types:
 
 ## Testing
 
-Install the dev dependencies (*in a virtualenv*), then run the suite. The tests
+Install the dev dependencies (in a virtualenv), then run the suite. The tests
 mock the native macOS Vision and Windows Runtime backends, so they run anywhere
 without those frameworks installed.
 
