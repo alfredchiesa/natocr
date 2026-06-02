@@ -21,6 +21,24 @@ except ImportError:
 
 from .models import BoundingBox, OCRResult, TextElement
 
+# curated fallback if the engine's live query fails - common windows ocr packs
+# (bcp-47 tags). actual availability depends on which packs are installed.
+COMMON_LANGUAGES = [
+    "en-US",
+    "en-GB",
+    "fr-FR",
+    "de-DE",
+    "es-ES",
+    "it-IT",
+    "pt-BR",
+    "nl-NL",
+    "ru-RU",
+    "ja-JP",
+    "ko-KR",
+    "zh-Hans-CN",
+    "zh-Hant-TW",
+]
+
 
 class WindowsOCR:
     """windows ocr implementation using windows runtime ocr"""
@@ -140,34 +158,17 @@ class WindowsOCR:
 
     @property
     def supported_languages(self) -> List[str]:
-        """get list of supported languages"""
-        # get available languages from ocr engine
+        """Language codes with an OCR pack installed on this machine.
+
+        Queried live from the engine, so it reflects whatever Windows OCR
+        language packs are installed (returned as BCP-47 tags like ``en-US``).
+        Falls back to the curated
+        [`COMMON_LANGUAGES`][natocr.windows.COMMON_LANGUAGES] set if the query
+        fails.
+        """
+        # the set depends on installed ocr language packs, so ask the engine
         try:
             languages = self.engine.available_recognizer_languages
             return [lang.language_tag for lang in languages]
         except Exception:
-            # fallback to common languages
-            return [
-                "en",
-                "es",
-                "fr",
-                "de",
-                "it",
-                "pt",
-                "ru",
-                "ja",
-                "ko",
-                "zh-Hans",
-                "zh-Hant",
-                "ar",
-                "hi",
-                "th",
-                "vi",
-                "tr",
-                "pl",
-                "nl",
-                "sv",
-                "da",
-                "no",
-                "fi",
-            ]
+            return list(COMMON_LANGUAGES)

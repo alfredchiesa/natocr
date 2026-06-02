@@ -9,13 +9,40 @@ from PIL import Image
 
 try:
     from Foundation import NSData
-    from Vision import VNImageRequestHandler, VNRecognizeTextRequest
+    from Vision import (
+        VNImageRequestHandler,
+        VNRecognizeTextRequest,
+        VNRequestTextRecognitionLevelAccurate,
+    )
 
     VISION_AVAILABLE = True
 except ImportError:
     VISION_AVAILABLE = False
 
 from .models import BoundingBox, OCRResult, TextElement
+
+# curated fallback if vision's live query fails - the accurate recognizer's set
+# as of macos 15 (bcp-47 tags, exactly what vision returns)
+COMMON_LANGUAGES = [
+    "en-US",
+    "fr-FR",
+    "it-IT",
+    "de-DE",
+    "es-ES",
+    "pt-BR",
+    "zh-Hans",
+    "zh-Hant",
+    "yue-Hans",
+    "yue-Hant",
+    "ko-KR",
+    "ja-JP",
+    "ru-RU",
+    "uk-UA",
+    "th-TH",
+    "vi-VT",
+    "ar-SA",
+    "ars-SA",
+]
 
 
 class MacOSOCR:
@@ -36,10 +63,11 @@ class MacOSOCR:
 
     def _setup_request(self):
         """setup vision text recognition request"""
-        self.request = VNRecognizeTextRequest()
-        self.request.recognitionLanguages = [self.language]
-        self.request.recognitionLevel = VNRecognizeTextRequest.RecognitionLevelAccurate
-        self.request.usesLanguageCorrection = True
+        self.request = VNRecognizeTextRequest.alloc().init()
+        # pyobjc needs the objc setters, plain attribute assignment is read-only
+        self.request.setRecognitionLanguages_([self.language])
+        self.request.setRecognitionLevel_(VNRequestTextRecognitionLevelAccurate)
+        self.request.setUsesLanguageCorrection_(True)
 
     def recognize(self, image: Image.Image) -> OCRResult:
         """
@@ -129,29 +157,21 @@ class MacOSOCR:
 
     @property
     def supported_languages(self) -> List[str]:
-        """get list of supported languages"""
-        # vision framework supports many languages, return common ones
-        return [
-            "en",
-            "es",
-            "fr",
-            "de",
-            "it",
-            "pt",
-            "ru",
-            "ja",
-            "ko",
-            "zh-Hans",
-            "zh-Hant",
-            "ar",
-            "hi",
-            "th",
-            "vi",
-            "tr",
-            "pl",
-            "nl",
-            "sv",
-            "da",
-            "no",
-            "fi",
-        ]
+        """Language codes Vision can recognize on this machine.
+
+        Queried live from Vision for the request's recognition level, so it
+        always matches what the installed macOS version actually supports
+        (returned as BCP-47 tags like ``en-US``). Falls back to the curated
+        [`COMMON_LANGUAGES`][natocr.macos.COMMON_LANGUAGES] set if the query
+        fails.
+        """
+        # ask vision directly instead of guessing - the set changes per os version
+        try:
+            languages, error = (
+                self.request.supportedRecognitionLanguagesAndReturnError_(None)
+            )
+            if error or not languages:
+                return list(COMMON_LANGUAGES)
+            return list(languages)
+        except Exception:
+            return list(COMMON_LANGUAGES)
