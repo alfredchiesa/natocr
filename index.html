@@ -339,6 +339,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Quick start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bounding-boxes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bounding Boxes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confidence-scores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confidence Scores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -460,6 +488,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Quick start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bounding-boxes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bounding Boxes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confidence-scores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confidence Scores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -502,18 +558,41 @@ than third-party alternatives like Tesseract. <strong>natocr</strong> makes reac
 painless via one clean Python API instead of wrangling with Objective-C bridges
 or WinRT async plumbing.</p>
 <h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>macos<span class="o">]</span><span class="w">      </span><span class="c1"># on macOS</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>windows<span class="o">]</span><span class="w">    </span><span class="c1"># on Windows</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>macos<span class="o">]</span><span class="w">              </span><span class="c1"># on macOS</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>windows<span class="o">]</span><span class="w">            </span><span class="c1"># on Windows</span>
 </code></pre></div>
 <h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">natocr</span><span class="w"> </span><span class="kn">import</span> <span class="n">OCR</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">ocr</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">()</span>                    <span class="c1"># defaults to english</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">ocr</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">()</span>                            <span class="c1"># defaults to english</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;invoice.png&quot;</span><span class="p">)</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Invoice #1042 Total $58.20 Thank you!
+</code></pre></div>
+<h3 id="bounding-boxes">Bounding Boxes<a class="headerlink" href="#bounding-boxes" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;receipt.png&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">box</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">bounds</span>        <span class="c1"># (x, y, width, height) in pixels</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">text</span><span class="si">!r}</span><span class="s2"> @ </span><span class="si">{</span><span class="n">box</span><span class="si">}</span><span class="s2"> conf=</span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">confidence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&#39;Acme Coffee&#39; @ (24.0, 18.0, 180.0, 32.0) conf=0.97
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>&#39;Latte&#39; @ (24.0, 70.0, 96.0, 28.0) conf=0.95
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>&#39;$4.50&#39; @ (220.0, 70.0, 80.0, 28.0) conf=0.88
+</code></pre></div>
+<h3 id="confidence-scores">Confidence Scores<a class="headerlink" href="#confidence-scores" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>[!NOTE]
+Confidence scores are only available on macOS.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;drivers-license.jpg&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># avg confidence, or None if unavailable</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Overall confidence: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">confidence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Overall confidence: 0.93
 </code></pre></div>
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>

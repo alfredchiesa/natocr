@@ -393,6 +393,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#supported-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported languages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported languages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#macos-vision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        macOS (Vision)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows-windows-runtime-ocr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows (Windows Runtime OCR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#accepted-inputs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -548,6 +587,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#supported-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported languages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported languages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#macos-vision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        macOS (Vision)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows-windows-runtime-ocr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows (Windows Runtime OCR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#accepted-inputs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -660,18 +738,127 @@ there.</p>
 <p>Pick a recognition language, and inspect what the current platform supports:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">ocr</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">ocr</span><span class="o">.</span><span class="n">platform</span><span class="p">)</span>               <span class="c1"># &#39;darwin&#39; or &#39;win32&#39;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">ocr</span><span class="o">.</span><span class="n">supported_languages</span><span class="p">)</span>    <span class="c1"># [&#39;en&#39;, &#39;es&#39;, &#39;fr&#39;, ...]</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">ocr</span><span class="o">.</span><span class="n">supported_languages</span><span class="p">)</span>    <span class="c1"># [&#39;en-US&#39;, &#39;fr-FR&#39;, &#39;de-DE&#39;, ...]</span>
+</code></pre></div>
+<h2 id="supported-languages">Supported languages<a class="headerlink" href="#supported-languages" title="Permanent link">&para;</a></h2>
+<p>The set of recognizable languages is decided by the OS, not by natocr, so the
+source of truth is always:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">OCR</span><span class="p">()</span><span class="o">.</span><span class="n">supported_languages</span>
+</code></pre></div>
+<p>It returns BCP-47 tags (e.g. <code>en-US</code>, <code>zh-Hans</code>) for whatever the current
+machine supports. If that live query ever fails, natocr falls back to a curated
+hardcoded set (<code>COMMON_LANGUAGES</code> in <code>natocr/macos.py</code> and <code>natocr/windows.py</code>),
+listed below.</p>
+<h3 id="macos-vision">macOS (Vision)<a class="headerlink" href="#macos-vision" title="Permanent link">&para;</a></h3>
+<p>Vision ships a fixed set per OS version, queried live from the framework. As of
+macOS 15, the accurate recognizer supports (this is also natocr's hardcoded
+<code>COMMON_LANGUAGES</code> fallback):</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>en-US</code> English</td>
+<td><code>fr-FR</code> French</td>
+<td><code>it-IT</code> Italian</td>
+<td><code>de-DE</code> German</td>
+</tr>
+<tr>
+<td><code>es-ES</code> Spanish</td>
+<td><code>pt-BR</code> Portuguese</td>
+<td><code>ru-RU</code> Russian</td>
+<td><code>uk-UA</code> Ukrainian</td>
+</tr>
+<tr>
+<td><code>ko-KR</code> Korean</td>
+<td><code>ja-JP</code> Japanese</td>
+<td><code>zh-Hans</code> Chinese (Simplified)</td>
+<td><code>zh-Hant</code> Chinese (Traditional)</td>
+</tr>
+<tr>
+<td><code>yue-Hans</code> Cantonese (Simplified)</td>
+<td><code>yue-Hant</code> Cantonese (Traditional)</td>
+<td><code>th-TH</code> Thai</td>
+<td><code>vi-VT</code> Vietnamese</td>
+</tr>
+<tr>
+<td><code>ar-SA</code> Arabic</td>
+<td><code>ars-SA</code> Najdi Arabic</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The exact list grows with newer macOS releases, so prefer the runtime query
+above over hard-coding it.</p>
+<h3 id="windows-windows-runtime-ocr">Windows (Windows Runtime OCR)<a class="headerlink" href="#windows-windows-runtime-ocr" title="Permanent link">&para;</a></h3>
+<p>Windows recognizes any language that has an <strong>OCR language pack</strong> installed, so
+the list is machine-specific. natocr's hardcoded <code>COMMON_LANGUAGES</code> fallback
+covers the common packs:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>en-US</code> English (US)</td>
+<td><code>en-GB</code> English (UK)</td>
+<td><code>fr-FR</code> French</td>
+<td><code>de-DE</code> German</td>
+</tr>
+<tr>
+<td><code>es-ES</code> Spanish</td>
+<td><code>it-IT</code> Italian</td>
+<td><code>pt-BR</code> Portuguese</td>
+<td><code>nl-NL</code> Dutch</td>
+</tr>
+<tr>
+<td><code>ru-RU</code> Russian</td>
+<td><code>ja-JP</code> Japanese</td>
+<td><code>ko-KR</code> Korean</td>
+<td><code>zh-Hans-CN</code> Chinese (Simplified)</td>
+</tr>
+<tr>
+<td><code>zh-Hant-TW</code> Chinese (Traditional)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>List what's actually installed (Windows PowerShell):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="no">[Windows.Media.Ocr.OcrEngine]</span><span class="p">::</span><span class="n">AvailableRecognizerLanguages</span>
+</code></pre></div>
+<p>See which packs are available, then install one (PowerShell as Administrator):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># list all installable OCR packs</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-WindowsCapability</span> <span class="n">-Online</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s1">&#39;Language.OCR*&#39;</span> <span class="p">}</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># install, e.g. French</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Get-WindowsCapability</span> <span class="n">-Online</span> <span class="p">|</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s1">&#39;Language.OCR*fr-FR*&#39;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  <span class="nb">Add-WindowsCapability</span> <span class="n">-Online</span>
 </code></pre></div>
 <h2 id="accepted-inputs">Accepted inputs<a class="headerlink" href="#accepted-inputs" title="Permanent link">&para;</a></h2>
 <p><code>recognize()</code> accepts more than file paths - hand it whatever you already have
 in memory:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;page.png&quot;</span><span class="p">)</span>              <span class="c1"># a file path</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;page.png&quot;</span><span class="p">))</span>  <span class="c1"># a PIL image</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>         <span class="c1"># a numpy array (e.g. from OpenCV)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;page.png&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>  <span class="c1"># raw image bytes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;page.png&quot;</span><span class="p">)</span>              <span class="c1"># a file path</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;page.png&quot;</span><span class="p">))</span>  <span class="c1"># a PIL image</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>         <span class="c1"># a numpy array (e.g. from OpenCV)</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;page.png&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>  <span class="c1"># raw image bytes</span>
 </code></pre></div>
 <table>
 <thead>
@@ -757,18 +944,18 @@ page to one of the formats above first (e.g. with <code>pdf2image</code> or <cod
 <p>The test suite mocks the native macOS Vision and Windows Runtime backends, so it
 runs on any platform without those frameworks installed.</p>
 <p>Set up a virtualenv and install the dev extras:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </code></pre></div>
 <p>Run the full suite (coverage is configured in <code>pyproject.toml</code>, so it runs by
 default):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pytest
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>pytest
 </code></pre></div>
 <p>Targeted runs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pytest<span class="w"> </span>tests/test_ocr.py<span class="w">     </span><span class="c1"># one file</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>pytest<span class="w"> </span>-k<span class="w"> </span>convert<span class="w">            </span><span class="c1"># match tests by name</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>pytest<span class="w"> </span>-v<span class="w">                    </span><span class="c1"># verbose</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>pytest<span class="w"> </span>tests/test_ocr.py<span class="w">     </span><span class="c1"># one file</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>pytest<span class="w"> </span>-k<span class="w"> </span>convert<span class="w">            </span><span class="c1"># match tests by name</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>pytest<span class="w"> </span>-v<span class="w">                    </span><span class="c1"># verbose</span>
 </code></pre></div>
 <p>Coverage output is printed to the terminal and written to <code>htmlcov/index.html</code>
 and <code>coverage.xml</code>.</p>
@@ -796,6 +983,10 @@ and <code>coverage.xml</code>.</p>
 <tr>
 <td><code>tests/test_windows.py</code></td>
 <td>the Windows Runtime backend (winrt mocked)</td>
+</tr>
+<tr>
+<td><code>tests/test_integration_macos.py</code></td>
+<td>real Vision end-to-end (runs on macOS, skips elsewhere)</td>
 </tr>
 <tr>
 <td><code>tests/test_package.py</code></td>
