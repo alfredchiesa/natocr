@@ -97,7 +97,6 @@ changelog_file = "CHANGELOG.md"
 commit_author = "semantic-release <semantic-release@example.com>"
 
 [tool.semantic_release.changelog]
-template_dir = "templates"
 exclude_merge_commits = true
 exclude_commits = [
     "chore:",
