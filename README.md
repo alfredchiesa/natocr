@@ -1,3 +1,152 @@
-# Natocr
+# natocr
 
-some info about natocr
+**natocr** (*native ocr*) is a small Python wrapper around the OCR engines that 
+already ship with macOS and Windows: Vision framework on macOS and Windows 
+Runtime OCR on Windows.
+
+These built-in engines are generally faster, more efficient, and more accurate 
+than third-party alternatives like Tesseract. **natocr** makes reaching for them 
+painless via one clean Python API instead of wrangling with Objective-C bridges 
+or WinRT async plumbing.
+
+## Install
+
+```bash
+pip install natocr[macos]      # on macOS
+pip install natocr[windows]    # on Windows
+```
+
+## Quick start
+
+```python
+from natocr import OCR
+
+ocr = OCR()                    # defaults to english
+result = ocr.recognize("invoice.png")
+
+print(result.text)
+```
+
+```text
+Invoice #1042 Total $58.20 Thank you!
+```
+
+### Confidence Scores and Bounding Boxes
+
+`recognize()` returns an `OCRResult`. Beyond the flat `.text`, you get a
+per-detection breakdown with bounding boxes and (*on macOS*) confidence scores:
+
+```python
+result = ocr.recognize("receipt.png")
+
+print(result.confidence)          # average confidence, or None if unavailable
+
+for element in result.elements:
+    box = element.bounds.bounds   # (x, y, width, height) in pixels
+    print(f"{element.text!r} @ {box} conf={element.confidence}")
+```
+
+```text
+0.93
+'Acme Coffee' @ (24.0, 18.0, 180.0, 32.0) conf=0.97
+'Latte' @ (24.0, 70.0, 96.0, 28.0) conf=0.95
+'$4.50' @ (220.0, 70.0, 80.0, 28.0) conf=0.88
+```
+
+### Lines and Words
+
+There's also convenience views for grouping results by reading order:
+
+```python
+result.lines      # ['Acme Coffee', 'Latte $4.50']  - elements grouped into lines
+result.words      # list of TextElement with non-empty text
+```
+
+### Detection Language
+
+Pick a different recognition language, and inspect what the current platform
+supports:
+
+```python
+ocr = OCR(language="fr")
+print(ocr.platform)               # 'darwin' or 'win32'
+print(ocr.supported_languages)    # ['en', 'es', 'fr', ...]
+```
+
+### Alternative Inputs
+
+`recognize()` accepts more than file paths - hand it whatever you already have
+in memory:
+
+```python
+from PIL import Image
+import numpy as np
+
+ocr.recognize("page.png")              # a file path
+ocr.recognize(Image.open("page.png"))  # a PIL image
+ocr.recognize(np.array(image))         # a numpy array (e.g. from OpenCV)
+ocr.recognize(open("page.png", "rb").read())  # raw image bytes
+```
+
+## Supported File Types
+
+Images are decoded with [Pillow](https://python-pillow.org/), so any raster
+format Pillow can open works as an input file or byte string.
+
+| Format | Extensions | Notes |
+| --- | --- | --- |
+| PNG | `.png` | recommended - lossless |
+| JPEG | `.jpg`, `.jpeg` | great for photos of documents |
+| TIFF | `.tif`, `.tiff` | common for scans |
+| BMP | `.bmp` | uncompressed bitmap |
+| GIF | `.gif` | first frame is used |
+| WebP | `.webp` | modern lossy/lossless |
+| PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
+
+In addition to file paths, `recognize()` accepts these in-memory types:
+
+| Input type | Example |
+| --- | --- |
+| `str` (file path) | `ocr.recognize("page.png")` |
+| `PIL.Image.Image` | `ocr.recognize(Image.open("page.png"))` |
+| `numpy.ndarray` | `ocr.recognize(np.array(image))` |
+| `bytes` (encoded image) | `ocr.recognize(data)` |
+
+> [!NOTE]
+> PDFs and other multi-page documents aren't decoded directly - rasterize a page
+> to one of the formats above first (e.g. with `pdf2image` or `pymupdf`).
+
+## Testing
+
+Install the dev dependencies (*in a virtualenv*), then run the suite. The tests
+mock the native macOS Vision and Windows Runtime backends, so they run anywhere
+without those frameworks installed.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
+
+Run everything with coverage (coverage is wired up in `pyproject.toml`, so plain
+`pytest` already reports it):
+
+```bash
+pytest
+```
+
+Other handy invocations:
+
+```bash
+# run a single test file
+pytest tests/test_models.py
+
+# run one test by name
+pytest -k test_lines_groups_close_y_into_single_line
+
+# verbose output
+pytest -v
+```
+
+Coverage reports land in the terminal, in `htmlcov/index.html`, and in
+`coverage.xml`.
