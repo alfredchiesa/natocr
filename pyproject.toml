@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "natocr"
-version = "1.3.2"
+version = "1.3.3"
 description = "Native OCR library using platform-specific frameworks (macOS Vision, Windows Runtime OCR)"
 readme = "README.md"
 license = { text = "MIT" }
