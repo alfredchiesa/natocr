@@ -67,15 +67,14 @@ class TestSupportedLanguages:
         ]
         assert backend.supported_languages == ["en-US", "fr-FR"]
 
-    def test_falls_back_on_error(self, backend):
+    def test_falls_back_to_common_set_on_error(self, backend):
         class RaisingEngine:
             @property
             def available_recognizer_languages(self):
                 raise RuntimeError("nope")
 
         backend.engine = RaisingEngine()
-        langs = backend.supported_languages
-        assert "en" in langs
+        assert backend.supported_languages == windows.COMMON_LANGUAGES
 
 
 class TestProcessResult:

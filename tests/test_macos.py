@@ -40,12 +40,14 @@ class FakeObservation:
 
 @pytest.fixture
 def vision(monkeypatch):
-    """flip VISION_AVAILABLE on and stub the request type"""
+    """flip VISION_AVAILABLE on and stub the vision symbols"""
     monkeypatch.setattr(macos, "VISION_AVAILABLE", True)
     request_cls = MagicMock()
-    request_cls.RecognitionLevelAccurate = "accurate"
-    # symbols don't exist when vision failed to import, so raising=False
+    # symbols may not exist when vision failed to import, so raising=False
     monkeypatch.setattr(macos, "VNRecognizeTextRequest", request_cls, raising=False)
+    monkeypatch.setattr(
+        macos, "VNRequestTextRecognitionLevelAccurate", 0, raising=False
+    )
     return request_cls
 
 
@@ -63,16 +65,32 @@ class TestInit:
     def test_configures_request(self, vision):
         ocr = MacOSOCR(language="fr")
         assert ocr.language == "fr"
-        assert ocr.request.recognitionLanguages == ["fr"]
-        assert ocr.request.recognitionLevel == "accurate"
-        assert ocr.request.usesLanguageCorrection is True
+        # pyobjc setters, not attribute assignment
+        ocr.request.setRecognitionLanguages_.assert_called_once_with(["fr"])
+        ocr.request.setRecognitionLevel_.assert_called_once_with(0)
+        ocr.request.setUsesLanguageCorrection_.assert_called_once_with(True)
 
 
 class TestSupportedLanguages:
-    def test_returns_common_languages(self, backend):
-        langs = backend.supported_languages
-        assert "en" in langs
-        assert "ja" in langs
+    def test_returns_languages_from_vision(self, backend):
+        backend.request.supportedRecognitionLanguagesAndReturnError_.return_value = (
+            ["en-US", "fr-FR", "zh-Hans"],
+            None,
+        )
+        assert backend.supported_languages == ["en-US", "fr-FR", "zh-Hans"]
+
+    def test_falls_back_to_common_set_on_error(self, backend):
+        backend.request.supportedRecognitionLanguagesAndReturnError_.return_value = (
+            None,
+            "some vision error",
+        )
+        assert backend.supported_languages == macos.COMMON_LANGUAGES
+
+    def test_falls_back_to_common_set_on_exception(self, backend):
+        backend.request.supportedRecognitionLanguagesAndReturnError_.side_effect = (
+            RuntimeError("boom")
+        )
+        assert backend.supported_languages == macos.COMMON_LANGUAGES
 
 
 class TestPilToNsdata:
