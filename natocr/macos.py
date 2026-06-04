@@ -99,7 +99,7 @@ class MacOSOCR:
         # process observations into structured result
         return self._process_observations(observations, image.size)
 
-    def _pil_to_nsdata(self, image: Image.Image) -> NSData:
+    def _pil_to_nsdata(self, image: Image.Image) -> "NSData":
         """convert pil image to nsdata for vision framework"""
         # convert to rgb if needed
         if image.mode != "RGB":
