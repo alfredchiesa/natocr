@@ -50,8 +50,8 @@ def test_supported_languages_is_real(ocr):
 
 
 def test_recognizes_rendered_text(ocr):
-    # full round-trip: render some text and read it back
-    result = ocr.recognize(render("Hello natocr 123"))
+    # full round-trip: render some text and read it back (single page -> [0])
+    result = ocr.recognize(render("Hello natocr 123"))[0]
 
     assert "natocr" in result.text.lower()
     # windows ocr doesn't expose confidence
@@ -66,7 +66,7 @@ def test_recognizes_french():
 
     # if the fr pack isn't installed the engine falls back to a default one,
     # which still reads latin script fine
-    result = OCR(language="fr").recognize(render("Bonjour le monde"))
+    result = OCR(language="fr").recognize(render("Bonjour le monde"))[0]
 
     assert "bonjour" in result.text.lower()
 
@@ -75,7 +75,7 @@ def test_recognizes_spanish():
     from natocr import OCR
 
     # spanish text; plain ascii words so it passes whatever pack is active
-    result = OCR(language="es").recognize(render("Hola mundo café"))
+    result = OCR(language="es").recognize(render("Hola mundo café"))[0]
 
     text = result.text.lower()
     assert "hola" in text and "mundo" in text

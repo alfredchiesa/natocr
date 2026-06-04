@@ -2,33 +2,37 @@
 
 ## Basics
 
-Create an `OCR` and call `recognize()`. It returns an
-[`OCRResult`](api.md#natocr.OCRResult):
+Create an `OCR` and call `recognize()`. It returns a `list` of
+[`OCRResult`](api.md#natocr.OCRResult) - one per page. Most images are a single
+page, so you'll usually read `pages[0]`:
 
 ```python
 from natocr import OCR
 
 ocr = OCR()                    # defaults to english
-result = ocr.recognize("invoice.png")
+pages = ocr.recognize("invoice.png")
 
-print(result.text)
+print(pages[0].text)
 ```
 
 ```text
 Invoice #1042 Total $58.20 Thank you!
 ```
 
+Multi-page documents (DjVu, TIFF, GIF) give one result per page - see
+[Multi-page documents](#multi-page-documents).
+
 ## Confidence scores and bounding boxes
 
-Beyond the flat `.text`, you get a per-detection breakdown with bounding boxes
-and (on macOS) confidence scores:
+Beyond the flat `.text`, each page gives a per-detection breakdown with bounding
+boxes and (on macOS) confidence scores:
 
 ```python
-result = ocr.recognize("receipt.png")
+page = ocr.recognize("receipt.png")[0]
 
-print(result.confidence)          # average confidence, or None if unavailable
+print(page.confidence)            # average confidence, or None if unavailable
 
-for element in result.elements:
+for element in page.elements:
     box = element.bounds.bounds   # (x, y, width, height) in pixels
     print(f"{element.text!r} @ {box} conf={element.confidence}")
 ```
@@ -46,11 +50,11 @@ for element in result.elements:
 
 ## Lines and words
 
-Convenience views group the result by reading order:
+Convenience views group a page by reading order:
 
 ```python
-result.lines      # ['Acme Coffee', 'Latte $4.50']  - elements grouped into lines
-result.words      # list of TextElement with non-empty text
+page.lines      # ['Acme Coffee', 'Latte $4.50']  - elements grouped into lines
+page.words      # list of TextElement with non-empty text
 ```
 
 ## Detection language
@@ -152,9 +156,9 @@ ocr.recognize(open("page.png", "rb").read())  # raw image bytes
 Images are decoded with [Pillow](https://python-pillow.org/), so any raster
 format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
 (and AVIF) is provided by the bundled [pillow-heif](https://github.com/bigcat88/pillow_heif),
-so iPhone photos work with no extra setup. JPEG XL and JPEG XR need a couple of
-extra decoders from the optional `extras` group (see
-[JPEG XL and JPEG XR](#jpeg-xl-and-jpeg-xr) below).
+so iPhone photos work with no extra setup. JPEG XL, JPEG XR, and DjVu need extra
+decoders from the optional `extras` group (see [JPEG XL and JPEG XR](#jpeg-xl-and-jpeg-xr)
+and [DjVu](#djvu) below).
 
 | Format | Extensions | Notes |
 | --- | --- | --- |
@@ -163,18 +167,21 @@ extra decoders from the optional `extras` group (see
 | JPEG 2000 | `.jp2`, `.j2k`, `.jpf`, `.jpx` | wavelet-based, decoded natively by Pillow |
 | JPEG XL | `.jxl` | modern successor to JPEG (needs `natocr[extras]`) |
 | JPEG XR / HD Photo | `.jxr`, `.wdp`, `.hdp` | Microsoft HD Photo (needs `natocr[extras]`) |
-| TIFF | `.tif`, `.tiff` | common for scans |
+| TIFF | `.tif`, `.tiff` | common for scans; **multi-page** |
 | BMP | `.bmp` | uncompressed bitmap |
-| GIF | `.gif` | first frame is used |
+| GIF | `.gif` | **multi-page** - one result per frame |
 | WebP | `.webp` | modern lossy/lossless |
 | HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
 | AVIF | `.avif` | AV1-based, decoded via the bundled pillow-heif |
 | PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
 | PCX | `.pcx` | legacy PC Paintbrush, common in old scan archives |
+| DjVu | `.djvu`, `.djv` | scanned documents; **multi-page** (needs `natocr[extras]` + the djvulibre system library) |
 
 !!! note
-    PDFs and other multi-page documents aren't decoded directly - rasterize a
-    page to one of the formats above first (e.g. with `pdf2image` or `pymupdf`).
+    Multi-page DjVu, TIFF, and GIF are read page-by-page by
+    [`recognize()`](#multi-page-documents). PDFs aren't decoded directly -
+    rasterize a page to one of the formats above first (e.g. with `pdf2image` or
+    `pymupdf`).
 
 ### JPEG 2000
 
@@ -205,6 +212,57 @@ ocr.recognize("photo.jxr")             # JPEG XR / HD Photo
     Without the `extras` group, the rest of the formats above (including
     JPEG 2000) keep working unchanged - only `.jxl` and `.jxr`/`.wdp`/`.hdp`
     require it.
+
+### DjVu
+
+DjVu (`.djvu`, `.djv`) is a format built for scanned text documents. Its decoder,
+[python-djvulibre](https://pypi.org/project/djvulibre-python/), is part of the
+`extras` group:
+
+```bash
+pip install natocr[extras]
+```
+
+It also needs the system **djvulibre** library it builds against - this is the
+library python-djvulibre links to, and it isn't installable with `pip`:
+
+```bash
+brew install djvulibre             # macOS
+sudo apt install libdjvulibre-dev  # Debian/Ubuntu
+```
+
+On Windows, install [DjVuLibre](https://djvu.sourceforge.net/) so its DLLs are on
+`PATH`. Once set up, DjVu decodes through the same `recognize()` call as any other
+format. Because DjVu is usually multi-page, see
+[Multi-page documents](#multi-page-documents) below.
+
+!!! note "Graceful fallback"
+    If `natocr[extras]` or the `djvulibre` library isn't installed, DjVu simply
+    isn't registered - opening a `.djvu` raises Pillow's usual
+    `UnidentifiedImageError`, and every other format keeps working. Nothing else
+    breaks.
+
+## Multi-page documents
+
+`recognize()` reads **every page** and returns one
+[`OCRResult`](api.md#natocr.OCRResult) per page, in order. The formats that can
+carry more than one page are **DjVu**, **multi-page TIFF**, and **animated GIF**:
+
+```python
+ocr = OCR()
+
+for i, page in enumerate(ocr.recognize("scan.djvu"), start=1):
+    print(f"--- page {i} ---")
+    print(page.text)
+```
+
+Single-page inputs (PNG, JPEG, ...) return a one-element list, so the same loop
+works for everything - or just grab `recognize(...)[0]`.
+
+!!! note
+    Only DjVu, TIFF, and GIF carry multiple pages here. PDFs aren't decoded
+    directly - rasterize a page to one of the supported formats first (e.g. with
+    `pdf2image` or `pymupdf`).
 
 ## Running the tests
 

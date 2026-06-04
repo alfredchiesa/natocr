@@ -3,12 +3,14 @@ main ocr class with platform detection and delegation
 """
 
 import io
+import os
 import sys
+import tempfile
 from typing import List, Union
 
 import numpy as np
 import pillow_heif
-from PIL import Image, ImageFile
+from PIL import Image, ImageFile, ImageSequence
 
 from .macos import MacOSOCR
 from .models import OCRResult
@@ -57,6 +59,86 @@ try:
 except ImportError:
     pass
 
+# djvu (scanned documents) has no pillow plugin either, so wire up a multi-page
+# opener backed by python-djvulibre when it's available (optional extras group).
+# needs the djvulibre system library too - see the docs.
+try:
+    import djvu.decode
+
+    class _DjVuImageFile(ImageFile.ImageFile):
+        format = "DJVU"
+        format_description = "DjVu scanned document"
+
+        def _open(self):
+            # djvulibre reads pages lazily from the source file, so it has to stay
+            # readable while we render. open from the real path when we have one,
+            # else spill the bytes to a temp file (also avoids windows file locks).
+            tmp = None
+            if getattr(self, "filename", None):
+                path = self.filename
+            else:
+                fd, path = tempfile.mkstemp(suffix=".djvu")
+                os.write(fd, self.fp.read())
+                os.close(fd)
+                tmp = path
+            try:
+                context = djvu.decode.Context()
+                document = context.new_document(djvu.decode.FileURI(path))
+                document.decoding_job.wait()
+                # render every page up front to rgb bytes, then we no longer need
+                # the file. matches the eager jpeg xr opener above.
+                fmt = djvu.decode.PixelFormatRgb()
+                fmt.rows_top_to_bottom = 1
+                fmt.y_top_to_bottom = 1
+                self._frames = []
+                for page in document.pages:
+                    job = page.decode(wait=True)
+                    width, height = job.size
+                    rect = (0, 0, width, height)
+                    raw = job.render(
+                        djvu.decode.RENDER_COLOR, rect, rect, fmt, row_alignment=1
+                    )
+                    self._frames.append(((width, height), bytes(raw)))
+            finally:
+                if tmp is not None:
+                    os.unlink(tmp)
+            self._frame = 0
+            self._load_frame()
+
+        def _load_frame(self):
+            # hand pillow the already-decoded page as a single raw rgb tile
+            size, raw = self._frames[self._frame]
+            self._size = size
+            self._mode = "RGB"
+            self.fp = io.BytesIO(raw)
+            self.tile = [("raw", (0, 0) + size, 0, ("RGB", 0, 1))]
+
+        @property
+        def n_frames(self):
+            return len(self._frames)
+
+        @property
+        def is_animated(self):
+            return len(self._frames) > 1
+
+        def seek(self, frame):
+            if not 0 <= frame < len(self._frames):
+                raise EOFError("no such page")
+            self._frame = frame
+            self._load_frame()
+
+        def tell(self):
+            return self._frame
+
+    def _accept_djvu(prefix):
+        return prefix[:8] == b"AT&TFORM"
+
+    Image.register_open(_DjVuImageFile.format, _DjVuImageFile, _accept_djvu)
+    Image.register_extensions(_DjVuImageFile.format, [".djvu", ".djv"])
+    Image.register_mime(_DjVuImageFile.format, "image/vnd.djvu")
+except ImportError:
+    pass
+
 
 class OCR:
     """Run OCR using the operating system's native engine.
@@ -69,8 +151,8 @@ class OCR:
         from natocr import OCR
 
         ocr = OCR()                       # english by default
-        result = ocr.recognize("invoice.png")
-        print(result.text)
+        for page in ocr.recognize("invoice.png"):
+            print(page.text)
         ```
 
     Args:
@@ -105,8 +187,15 @@ class OCR:
         else:
             raise RuntimeError(f"unsupported platform: {sys.platform}")
 
-    def recognize(self, image: Union[str, Image.Image, np.ndarray, bytes]) -> OCRResult:
-        """Recognize text in an image.
+    def recognize(
+        self, image: Union[str, Image.Image, np.ndarray, bytes]
+    ) -> List[OCRResult]:
+        """Recognize text on every page of an image or document.
+
+        Reads each page in order and returns one result per page. Single-page
+        inputs (a PNG, a JPEG, ...) come back as a one-element list, so you can
+        always iterate the result. Multi-page formats - DjVu, multi-page TIFF,
+        and animated GIF - give one [OCRResult][natocr.OCRResult] per page.
 
         Args:
             image: what to read. One of: a file path (``str``), a
@@ -114,8 +203,8 @@ class OCR:
                 ``bytes``.
 
         Returns:
-            An [OCRResult][natocr.OCRResult] with the detected text and
-            per-element metadata.
+            One [OCRResult][natocr.OCRResult] per page, in page order. At least
+            one element for any valid input.
 
         Raises:
             ValueError: if ``image`` isn't one of the supported types.
@@ -123,8 +212,12 @@ class OCR:
         # convert input to pil image for consistent processing
         pil_image = self._convert_to_pil(image)
 
-        # delegate to platform-specific implementation
-        return self._backend.recognize(pil_image)
+        # ImageSequence.Iterator walks frames/pages for any multi-frame format;
+        # single-page inputs simply yield one frame
+        return [
+            self._backend.recognize(page)
+            for page in ImageSequence.Iterator(pil_image)
+        ]
 
     def _convert_to_pil(
         self, image: Union[str, Image.Image, np.ndarray, bytes]

@@ -14,7 +14,7 @@ or WinRT async plumbing.
 ```bash
 pip install natocr
 
-# for JPEG XL & JPEG XK support
+# for JPEG XL, JPEG XR & DjVu support
 pip install natocr[extras]
 ```
 
@@ -28,26 +28,30 @@ pick.
 from natocr import OCR
 
 ocr = OCR()                    # defaults to english
-result = ocr.recognize("invoice.png")
+pages = ocr.recognize("invoice.png")   # one OCRResult per page
 
-print(result.text)
+print(pages[0].text)
 ```
 
 ```text
 Invoice #1042 Total $58.20 Thank you!
 ```
 
+`recognize()` always returns a `list` of `OCRResult` - one per page. Most images
+are a single page, so you'll often just read `pages[0]`; multi-page documents
+(DjVu, TIFF, GIF) give one result per page (see [Multi-page documents](#multi-page-documents)).
+
 ### Confidence Scores and Bounding Boxes
 
-`recognize()` returns an `OCRResult`. Beyond the flat `.text`, you get a
-per-detection breakdown with bounding boxes and (*on macOS*) confidence scores:
+Beyond the flat `.text`, each `OCRResult` carries a per-detection breakdown with
+bounding boxes and (*on macOS*) confidence scores:
 
 ```python
-result = ocr.recognize("receipt.png")
+page = ocr.recognize("receipt.png")[0]   # first (often only) page
 
-print(result.confidence)          # average confidence, or None if unavailable
+print(page.confidence)            # average confidence, or None if unavailable
 
-for element in result.elements:
+for element in page.elements:
     box = element.bounds.bounds   # (x, y, width, height) in pixels
     print(f"{element.text!r} @ {box} conf={element.confidence}")
 ```
@@ -61,11 +65,11 @@ for element in result.elements:
 
 ### Lines and Words
 
-There's also convenience views for grouping results by reading order:
+There's also convenience views for grouping a page by reading order:
 
 ```python
-result.lines      # ['Acme Coffee', 'Latte $4.50']  - elements grouped into lines
-result.words      # list of TextElement with non-empty text
+page.lines      # ['Acme Coffee', 'Latte $4.50']  - elements grouped into lines
+page.words      # list of TextElement with non-empty text
 ```
 
 ### Detection Language
@@ -105,15 +109,16 @@ ocr.recognize(open("page.png", "rb").read())  # raw image bytes
 Images are decoded with [Pillow](https://python-pillow.org/), so any raster
 format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
 (and AVIF) is provided by the bundled [pillow-heif](https://github.com/bigcat88/pillow_heif),
-so iPhone photos work with no extra setup. JPEG XL and JPEG XR need a couple of
-extra decoders - install them with `pip install natocr[extras]` (see
-[JPEG XL and JPEG XR](#jpeg-xl-and-jpeg-xr) below).
+so iPhone photos work with no extra setup. JPEG XL, JPEG XR, and DjVu need extra
+decoders - install them with `pip install natocr[extras]` (see
+[Optional formats](#optional-formats-jpeg-xl-jpeg-xr-djvu) below).
 
 | Format | Extensions | Notes |
 | --- | --- | --- |
 | AVIF | `.avif` | AV1-based, decoded via the bundled pillow-heif |
 | BMP | `.bmp` | uncompressed bitmap |
-| GIF | `.gif` | first frame is used |
+| DjVu | `.djvu`, `.djv` | scanned documents; **multi-page** (needs `natocr[extras]` + the djvulibre system library) |
+| GIF | `.gif` | **multi-page** - one result per frame |
 | HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
 | JPEG | `.jpg`, `.jpeg` | great for photos of documents |
 | JPEG 2000 | `.jp2`, `.j2k`, `.jpf`, `.jpx` | wavelet-based, decoded natively by Pillow |
@@ -122,23 +127,56 @@ extra decoders - install them with `pip install natocr[extras]` (see
 | PCX | `.pcx` | legacy PC Paintbrush, common in old scan archives |
 | PNG | `.png` | recommended - lossless |
 | PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
-| TIFF | `.tif`, `.tiff` | common for scans |
+| TIFF | `.tif`, `.tiff` | common for scans; **multi-page** |
 | WebP | `.webp` | modern lossy/lossless |
 
-### JPEG XL and JPEG XR
+### Optional formats (JPEG XL, JPEG XR, DjVu)
 
-These two are optional because their decoders are extra dependencies. Install
-them with:
+These are optional because their decoders are extra dependencies. Install them
+with:
 
 ```bash
 pip install natocr[extras]
 ```
 
 That pulls in [pillow-jxl-plugin](https://github.com/inflation/pillow-jxl-plugin)
-for `.jxl` and [imagecodecs](https://github.com/cgohlke/imagecodecs) for
-`.jxr`/`.wdp`/`.hdp`. Once installed they decode through the same `recognize()`
+for `.jxl`, [imagecodecs](https://github.com/cgohlke/imagecodecs) for
+`.jxr`/`.wdp`/`.hdp`, and [python-djvulibre](https://pypi.org/project/djvulibre-python/)
+for `.djvu`/`.djv`. Once installed they decode through the same `recognize()`
 call as every other format - no extra code. Without the extra, the rest of the
 formats above (including JPEG 2000) keep working unchanged.
+
+**DjVu also needs the system `djvulibre` library** that python-djvulibre builds
+against:
+
+```bash
+brew install djvulibre         # macOS
+sudo apt install libdjvulibre-dev   # Debian/Ubuntu
+```
+
+On Windows, install [DjVuLibre](https://djvu.sourceforge.net/) so its DLLs land
+on `PATH` (the wheel links against it).
+
+> [!NOTE]
+> Support degrades gracefully: if `natocr[extras]` or the `djvulibre` library
+> isn't present, DjVu just isn't registered and opening a `.djvu` raises Pillow's
+> usual `UnidentifiedImageError`. Every other format keeps working - nothing else
+> breaks.
+
+### Multi-page documents
+
+`recognize()` reads **every page** and returns one `OCRResult` per page, in
+order. The formats that can carry more than one page are **DjVu**, **multi-page
+TIFF**, and **animated GIF**:
+
+```python
+for i, page in enumerate(ocr.recognize("scan.djvu"), start=1):
+    print(f"--- page {i} ---")
+    print(page.text)
+```
+
+Single-page inputs (PNG, JPEG, ...) come back as a one-element list, so the same
+loop works for everything - or just grab `recognize(...)[0]`.
 
 In addition to file paths, `recognize()` accepts these in-memory types:
 
@@ -150,8 +188,9 @@ In addition to file paths, `recognize()` accepts these in-memory types:
 | `bytes` (encoded image) | `ocr.recognize(data)` |
 
 > [!NOTE]
-> PDFs and other multi-page documents aren't decoded directly - rasterize a page
-> to one of the formats above first (e.g. with `pdf2image` or `pymupdf`).
+> Only DjVu, TIFF, and GIF carry multiple pages here. PDFs aren't decoded
+> directly - rasterize a page to one of the formats above first (e.g. with
+> `pdf2image` or `pymupdf`).
 
 ## Testing
 

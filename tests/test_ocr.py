@@ -1,6 +1,8 @@
 """tests for the platform-detecting OCR facade in core.py"""
 
 import io
+import shutil
+import subprocess
 from unittest.mock import MagicMock
 
 import numpy as np
@@ -9,6 +11,30 @@ from PIL import Image
 
 from natocr import core
 from natocr.core import OCR
+
+# djvu fixtures need both the python decoder and djvulibre's encoder tools, so
+# skip the whole group cleanly anywhere either is missing (same spirit as the
+# importorskip guards used for jpeg xl / jpeg xr below).
+djvu_available = pytest.mark.skipif(
+    shutil.which("c44") is None or shutil.which("djvm") is None,
+    reason="djvulibre encoder tools (c44/djvm) not installed",
+)
+
+
+def _make_djvu(tmp_path, sizes):
+    """encode a djvu document with one page per size via c44 + djvm"""
+    pages = []
+    for i, size in enumerate(sizes):
+        ppm = tmp_path / f"page{i}.ppm"
+        Image.new("RGB", size, (255, 255, 255)).save(ppm)
+        djv = tmp_path / f"page{i}.djvu"
+        subprocess.run(["c44", str(ppm), str(djv)], check=True, capture_output=True)
+        pages.append(str(djv))
+    if len(pages) == 1:
+        return pages[0]
+    out = tmp_path / "doc.djvu"
+    subprocess.run(["djvm", "-c", str(out), *pages], check=True, capture_output=True)
+    return str(out)
 
 
 @pytest.fixture
@@ -61,12 +87,13 @@ class TestBackendSelection:
 
 
 class TestRecognize:
-    def test_converts_then_delegates(self, mock_backend):
+    def test_single_page_converts_then_delegates(self, mock_backend):
+        # a single-page input comes back as a one-element list
         ocr, backend = mock_backend
         sentinel = object()
         backend.recognize.return_value = sentinel
         img = Image.new("RGB", (4, 4))
-        assert ocr.recognize(img) is sentinel
+        assert ocr.recognize(img) == [sentinel]
         backend.recognize.assert_called_once_with(img)
 
 
@@ -183,10 +210,77 @@ class TestConvertToPil:
         assert isinstance(out, Image.Image)
         assert out.size == (6, 6)
 
+    @djvu_available
+    def test_djvu_path(self, mock_backend, tmp_path):
+        pytest.importorskip("djvu.decode")
+        ocr, _ = mock_backend
+        path = _make_djvu(tmp_path, [(40, 30)])
+        out = ocr._convert_to_pil(path)
+        assert isinstance(out, Image.Image)
+        assert out.mode == "RGB"
+        assert out.size == (40, 30)
+
+    @djvu_available
+    def test_djvu_bytes(self, mock_backend, tmp_path):
+        pytest.importorskip("djvu.decode")
+        ocr, _ = mock_backend
+        data = open(_make_djvu(tmp_path, [(24, 18)]), "rb").read()
+        out = ocr._convert_to_pil(data)
+        assert isinstance(out, Image.Image)
+        assert out.mode == "RGB"
+        assert out.size == (24, 18)
+
+    @djvu_available
+    def test_djvu_multipage_frames(self, mock_backend, tmp_path):
+        # a multi-page djvu exposes one pillow frame per page; recognize() walks
+        # them all (see TestRecognize)
+        pytest.importorskip("djvu.decode")
+        ocr, _ = mock_backend
+        path = _make_djvu(tmp_path, [(40, 30), (24, 18)])
+        out = ocr._convert_to_pil(path)
+        assert out.size == (40, 30)  # first page
+        assert out.n_frames == 2
+
     def test_unsupported_type_raises(self, mock_backend):
         ocr, _ = mock_backend
         with pytest.raises(ValueError, match="unsupported image type"):
             ocr._convert_to_pil(123)
+
+
+class TestRecognizeMultiPage:
+    def test_multipage_tiff_one_result_per_page(self, mock_backend):
+        ocr, backend = mock_backend
+        backend.recognize.side_effect = lambda page: page.size
+        buf = io.BytesIO()
+        Image.new("RGB", (20, 15)).save(
+            buf, format="TIFF", save_all=True, append_images=[Image.new("RGB", (7, 9))]
+        )
+        results = ocr.recognize(buf.getvalue())
+        # one recognize() call per page, in page order
+        assert results == [(20, 15), (7, 9)]
+        assert backend.recognize.call_count == 2
+
+    def test_animated_gif_walks_every_frame(self, mock_backend):
+        ocr, backend = mock_backend
+        buf = io.BytesIO()
+        # distinct frame colors so the gif writer keeps both frames
+        Image.new("RGB", (10, 10), (0, 0, 0)).save(
+            buf,
+            format="GIF",
+            save_all=True,
+            append_images=[Image.new("RGB", (10, 10), (255, 255, 255))],
+        )
+        results = ocr.recognize(buf.getvalue())
+        assert len(results) == 2
+
+    @djvu_available
+    def test_multipage_djvu(self, mock_backend, tmp_path):
+        pytest.importorskip("djvu.decode")
+        ocr, backend = mock_backend
+        backend.recognize.side_effect = lambda page: page.size
+        path = _make_djvu(tmp_path, [(40, 30), (24, 18)])
+        results = ocr.recognize(path)
+        assert results == [(40, 30), (24, 18)]
 
 
 class TestProperties:

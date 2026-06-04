@@ -15,15 +15,11 @@ or WinRT async plumbing.
 pip install natocr
 ```
 
-The right native backend (Vision on macOS, Windows Runtime OCR on Windows) is
-pulled in automatically for your platform - no OS-specific install command to
-pick.
-
-Add the `extras` group for JPEG XL and JPEG XR / HD Photo decoding (see
+Add the `extras` group for **JPEG XL** / **XR** / **HD** and **DjVu** decoding (see
 [supported file formats](usage.md#supported-file-formats)):
 
 ```bash
-pip install natocr[extras]             # + the extra image decoders
+pip install natocr[extras]
 ```
 
 ## Quick start
@@ -31,23 +27,27 @@ pip install natocr[extras]             # + the extra image decoders
 ```python
 from natocr import OCR
 
-ocr = OCR()                            # defaults to english
-result = ocr.recognize("invoice.png")
+ocr = OCR()
+pages = ocr.recognize("invoice.png")
 
-print(result.text)
+print(pages[0].text)
 ```
 
 ```text
 Invoice #1042 Total $58.20 Thank you!
 ```
 
+`recognize()` always returns a `list` - one [`OCRResult`](api.md#natocr.OCRResult)
+per page. Most images are a single page, so reach for `pages[0]`; see
+[Multi-page documents](usage.md#multi-page-documents) for DjVu / TIFF / GIF.
+
 ### Bounding Boxes
 
 ```python
-result = ocr.recognize("receipt.png")
+page = ocr.recognize("receipt.png")[0]
 
-for element in result.elements:
-    box = element.bounds.bounds        # (x, y, width, height) in pixels
+for element in page.elements:
+    box = element.bounds.bounds
     print(f"{element.text!r} @ {box} conf={element.confidence}")
 ```
 
@@ -63,10 +63,10 @@ On macOS you can view the confidence score of the total detections or per
 individual detection. This is not currently available on windows.
 
 ```python
-result = ocr.recognize("drivers-license.jpg")
+page = ocr.recognize("drivers-license.jpg")[0]
 
 # avg confidence, or None if unavailable
-print(f"Overall confidence: {result.confidence}")
+print(f"Overall confidence: {page.confidence}")
 ```
 
 ```text
