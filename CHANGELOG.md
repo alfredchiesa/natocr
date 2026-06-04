@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.5.6 (2026-06-04)
+
+### Bug Fixes
+
+- Moved platform backends from opt-in extras to automatic, os-conditional core dependencies
+  ([`bbcdac3`](https://github.com/alfredchiesa/natocr/commit/bbcdac32768155593b5758384a149e435a29a6f2))
+
+
 ## v1.5.5 (2026-06-04)
 
 ### Bug Fixes
