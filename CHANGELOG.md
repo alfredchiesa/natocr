@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.5.5 (2026-06-04)
+
+### Bug Fixes
+
+- Ensures `PCX` is noted and tested
+  ([`1c69635`](https://github.com/alfredchiesa/natocr/commit/1c696351a20146cd2deb751402d9b4b975f0849f))
+
+
 ## v1.5.4 (2026-06-04)
 
 ### Bug Fixes
