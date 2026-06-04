@@ -451,6 +451,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Supported file formats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jpeg-2000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JPEG 2000
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jpeg-xl-and-jpeg-xr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JPEG XL and JPEG XR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -644,6 +672,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Supported file formats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jpeg-2000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JPEG 2000
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jpeg-xl-and-jpeg-xr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JPEG XL and JPEG XR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -890,7 +946,9 @@ in memory:</p>
 <p>Images are decoded with <a href="https://python-pillow.org/">Pillow</a>, so any raster
 format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
 is provided by the bundled <a href="https://github.com/bigcat88/pillow_heif">pillow-heif</a>,
-so iPhone photos work with no extra setup.</p>
+so iPhone photos work with no extra setup. JPEG XL and JPEG XR need a couple of
+extra decoders from the optional <code>extras</code> group (see
+<a href="#jpeg-xl-and-jpeg-xr">JPEG XL and JPEG XR</a> below).</p>
 <table>
 <thead>
 <tr>
@@ -909,6 +967,21 @@ so iPhone photos work with no extra setup.</p>
 <td>JPEG</td>
 <td><code>.jpg</code>, <code>.jpeg</code></td>
 <td>great for photos of documents</td>
+</tr>
+<tr>
+<td>JPEG 2000</td>
+<td><code>.jp2</code>, <code>.j2k</code>, <code>.jpf</code>, <code>.jpx</code></td>
+<td>wavelet-based, decoded natively by Pillow</td>
+</tr>
+<tr>
+<td>JPEG XL</td>
+<td><code>.jxl</code></td>
+<td>modern successor to JPEG (needs <code>natocr[extras]</code>)</td>
+</tr>
+<tr>
+<td>JPEG XR / HD Photo</td>
+<td><code>.jxr</code>, <code>.wdp</code>, <code>.hdp</code></td>
+<td>Microsoft HD Photo (needs <code>natocr[extras]</code>)</td>
 </tr>
 <tr>
 <td>TIFF</td>
@@ -947,22 +1020,44 @@ so iPhone photos work with no extra setup.</p>
 <p>PDFs and other multi-page documents aren't decoded directly - rasterize a
 page to one of the formats above first (e.g. with <code>pdf2image</code> or <code>pymupdf</code>).</p>
 </div>
+<h3 id="jpeg-2000">JPEG 2000<a class="headerlink" href="#jpeg-2000" title="Permanent link">&para;</a></h3>
+<p>JPEG 2000 (<code>.jp2</code>, <code>.j2k</code>, <code>.jpf</code>, <code>.jpx</code>) is decoded by Pillow itself, so it
+works out of the box with no extra dependencies.</p>
+<h3 id="jpeg-xl-and-jpeg-xr">JPEG XL and JPEG XR<a class="headerlink" href="#jpeg-xl-and-jpeg-xr" title="Permanent link">&para;</a></h3>
+<p>These two are optional because their decoders are extra dependencies. Install
+the <code>extras</code> group to enable them:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>extras<span class="o">]</span>
+</code></pre></div>
+<p>That pulls in
+<a href="https://github.com/inflation/pillow-jxl-plugin">pillow-jxl-plugin</a> for <code>.jxl</code>
+and <a href="https://github.com/cgohlke/imagecodecs">imagecodecs</a> for
+<code>.jxr</code>/<code>.wdp</code>/<code>.hdp</code>. Once installed, both decode through the same <code>recognize()</code>
+call as every other format - no extra code:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;scan.jxl&quot;</span><span class="p">)</span>              <span class="c1"># JPEG XL</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;photo.jxr&quot;</span><span class="p">)</span>             <span class="c1"># JPEG XR / HD Photo</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Without the <code>extras</code> group, the rest of the formats above (including
+JPEG 2000) keep working unchanged - only <code>.jxl</code> and <code>.jxr</code>/<code>.wdp</code>/<code>.hdp</code>
+require it.</p>
+</div>
 <h2 id="running-the-tests">Running the tests<a class="headerlink" href="#running-the-tests" title="Permanent link">&para;</a></h2>
 <p>The test suite mocks the native macOS Vision and Windows Runtime backends, so it
 runs on any platform without those frameworks installed.</p>
 <p>Set up a virtualenv and install the dev extras:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </code></pre></div>
 <p>Run the full suite (coverage is configured in <code>pyproject.toml</code>, so it runs by
 default):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>pytest
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pytest
 </code></pre></div>
 <p>Targeted runs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>pytest<span class="w"> </span>tests/test_ocr.py<span class="w">     </span><span class="c1"># one file</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>pytest<span class="w"> </span>-k<span class="w"> </span>convert<span class="w">            </span><span class="c1"># match tests by name</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>pytest<span class="w"> </span>-v<span class="w">                    </span><span class="c1"># verbose</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>pytest<span class="w"> </span>tests/test_ocr.py<span class="w">     </span><span class="c1"># one file</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>pytest<span class="w"> </span>-k<span class="w"> </span>convert<span class="w">            </span><span class="c1"># match tests by name</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>pytest<span class="w"> </span>-v<span class="w">                    </span><span class="c1"># verbose</span>
 </code></pre></div>
 <p>Coverage output is printed to the terminal and written to <code>htmlcov/index.html</code>
 and <code>coverage.xml</code>.</p>
