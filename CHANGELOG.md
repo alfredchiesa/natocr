@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.5.1 (2026-06-04)
+
+### Bug Fixes
+
+- Defers `NSData` annotation so import works without `pyobjc`
+  ([`36af3e8`](https://github.com/alfredchiesa/natocr/commit/36af3e889230fc45fc1b1adb1e085c0b6f7a546f))
+
+
 ## v1.5.0 (2026-06-04)
 
 ### Continuous Integration
