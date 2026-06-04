@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.4.0 (2026-06-04)
+
+### Features
+
+- Adds `HEIC` and `HEIF` compatibility
+  ([`b2ac7a0`](https://github.com/alfredchiesa/natocr/commit/b2ac7a08b8d7757aca14e9119e3f001d9d635a95))
+
+
 ## v1.3.3 (2026-06-02)
 
 ### Bug Fixes
