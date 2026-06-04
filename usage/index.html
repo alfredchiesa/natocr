@@ -888,7 +888,9 @@ in memory:</p>
 </table>
 <h2 id="supported-file-formats">Supported file formats<a class="headerlink" href="#supported-file-formats" title="Permanent link">&para;</a></h2>
 <p>Images are decoded with <a href="https://python-pillow.org/">Pillow</a>, so any raster
-format Pillow can open works as an input file or byte string.</p>
+format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
+is provided by the bundled <a href="https://github.com/bigcat88/pillow_heif">pillow-heif</a>,
+so iPhone photos work with no extra setup.</p>
 <table>
 <thead>
 <tr>
@@ -927,6 +929,11 @@ format Pillow can open works as an input file or byte string.</p>
 <td>WebP</td>
 <td><code>.webp</code></td>
 <td>modern lossy/lossless</td>
+</tr>
+<tr>
+<td>HEIC/HEIF</td>
+<td><code>.heic</code>, <code>.heif</code>, <code>.hif</code></td>
+<td>iPhone photos and screenshots</td>
 </tr>
 <tr>
 <td>PPM/PGM</td>
