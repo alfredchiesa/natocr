@@ -809,7 +809,8 @@ page, so you'll usually read <code>pages[0]</code>:</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Invoice #1042 Total $58.20 Thank you!
 </code></pre></div>
-<p>Multi-page documents (DjVu, TIFF, GIF) give one result per page - see
+<p>Multi-page/multi-frame inputs (DjVu, TIFF, GIF, animated PNG, multi-image
+HEIC/HEIF) give one result per frame - see
 <a href="#multi-page-documents">Multi-page documents</a>.</p>
 <h2 id="confidence-scores-and-bounding-boxes">Confidence scores and bounding boxes<a class="headerlink" href="#confidence-scores-and-bounding-boxes" title="Permanent link">&para;</a></h2>
 <p>Beyond the flat <code>.text</code>, each page gives a per-detection breakdown with bounding
@@ -867,6 +868,12 @@ macOS 15, the accurate recognizer supports (this is also natocr's hardcoded
 </thead>
 <tbody>
 <tr>
+<td><code>ar-SA</code> Arabic</td>
+<td><code>ars-SA</code> Najdi Arabic</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td><code>en-US</code> English</td>
 <td><code>fr-FR</code> French</td>
 <td><code>it-IT</code> Italian</td>
@@ -889,12 +896,6 @@ macOS 15, the accurate recognizer supports (this is also natocr's hardcoded
 <td><code>yue-Hant</code> Cantonese (Traditional)</td>
 <td><code>th-TH</code> Thai</td>
 <td><code>vi-VT</code> Vietnamese</td>
-</tr>
-<tr>
-<td><code>ar-SA</code> Arabic</td>
-<td><code>ars-SA</code> Najdi Arabic</td>
-<td></td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -1006,9 +1007,29 @@ and <a href="#djvu">DjVu</a> below).</p>
 </thead>
 <tbody>
 <tr>
-<td>PNG</td>
-<td><code>.png</code></td>
-<td>recommended - lossless</td>
+<td>AVIF</td>
+<td><code>.avif</code></td>
+<td>AV1-based, decoded via the bundled pillow-heif</td>
+</tr>
+<tr>
+<td>BMP</td>
+<td><code>.bmp</code></td>
+<td>uncompressed bitmap</td>
+</tr>
+<tr>
+<td>DjVu</td>
+<td><code>.djvu</code>, <code>.djv</code></td>
+<td>scanned documents; <strong>multi-page</strong> (needs <code>natocr[extras]</code> + the djvulibre system library)</td>
+</tr>
+<tr>
+<td>GIF</td>
+<td><code>.gif</code></td>
+<td><strong>multi-frame</strong> - one result per frame</td>
+</tr>
+<tr>
+<td>HEIC/HEIF</td>
+<td><code>.heic</code>, <code>.heif</code>, <code>.hif</code></td>
+<td>iPhone photos and screenshots; <strong>multi-image</strong> containers give one result per image</td>
 </tr>
 <tr>
 <td>JPEG</td>
@@ -1031,34 +1052,14 @@ and <a href="#djvu">DjVu</a> below).</p>
 <td>Microsoft HD Photo (needs <code>natocr[extras]</code>)</td>
 </tr>
 <tr>
-<td>TIFF</td>
-<td><code>.tif</code>, <code>.tiff</code></td>
-<td>common for scans; <strong>multi-page</strong></td>
+<td>PCX</td>
+<td><code>.pcx</code></td>
+<td>legacy PC Paintbrush, common in old scan archives</td>
 </tr>
 <tr>
-<td>BMP</td>
-<td><code>.bmp</code></td>
-<td>uncompressed bitmap</td>
-</tr>
-<tr>
-<td>GIF</td>
-<td><code>.gif</code></td>
-<td><strong>multi-page</strong> - one result per frame</td>
-</tr>
-<tr>
-<td>WebP</td>
-<td><code>.webp</code></td>
-<td>modern lossy/lossless</td>
-</tr>
-<tr>
-<td>HEIC/HEIF</td>
-<td><code>.heic</code>, <code>.heif</code>, <code>.hif</code></td>
-<td>iPhone photos and screenshots</td>
-</tr>
-<tr>
-<td>AVIF</td>
-<td><code>.avif</code></td>
-<td>AV1-based, decoded via the bundled pillow-heif</td>
+<td>PNG</td>
+<td><code>.png</code></td>
+<td>recommended - lossless; <strong>animated PNG</strong> gives one result per frame</td>
 </tr>
 <tr>
 <td>PPM/PGM</td>
@@ -1066,23 +1067,23 @@ and <a href="#djvu">DjVu</a> below).</p>
 <td>netpbm bitmaps</td>
 </tr>
 <tr>
-<td>PCX</td>
-<td><code>.pcx</code></td>
-<td>legacy PC Paintbrush, common in old scan archives</td>
+<td>TIFF</td>
+<td><code>.tif</code>, <code>.tiff</code></td>
+<td>common for scans; <strong>multi-page</strong></td>
 </tr>
 <tr>
-<td>DjVu</td>
-<td><code>.djvu</code>, <code>.djv</code></td>
-<td>scanned documents; <strong>multi-page</strong> (needs <code>natocr[extras]</code> + the djvulibre system library)</td>
+<td>WebP</td>
+<td><code>.webp</code></td>
+<td>modern lossy/lossless</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Multi-page DjVu, TIFF, and GIF are read page-by-page by
-<a href="#multi-page-documents"><code>recognize()</code></a>. PDFs aren't decoded directly -
-rasterize a page to one of the formats above first (e.g. with <code>pdf2image</code> or
-<code>pymupdf</code>).</p>
+<p>Multi-page DjVu, TIFF, GIF, animated PNG, and multi-image HEIC/HEIF are read
+frame-by-frame by <a href="#multi-page-documents"><code>recognize()</code></a>. PDFs aren't decoded
+directly - rasterize a page to one of the formats above first (e.g. with
+<code>pdf2image</code> or <code>pymupdf</code>).</p>
 </div>
 <h3 id="jpeg-2000">JPEG 2000<a class="headerlink" href="#jpeg-2000" title="Permanent link">&para;</a></h3>
 <p>JPEG 2000 (<code>.jp2</code>, <code>.j2k</code>, <code>.jpf</code>, <code>.jpx</code>) is decoded by Pillow itself, so it
@@ -1131,7 +1132,8 @@ breaks.</p>
 <h2 id="multi-page-documents">Multi-page documents<a class="headerlink" href="#multi-page-documents" title="Permanent link">&para;</a></h2>
 <p><code>recognize()</code> reads <strong>every page</strong> and returns one
 <a href="../api/#natocr.OCRResult"><code>OCRResult</code></a> per page, in order. The formats that can
-carry more than one page are <strong>DjVu</strong>, <strong>multi-page TIFF</strong>, and <strong>animated GIF</strong>:</p>
+carry more than one frame/page are <strong>DjVu</strong>, <strong>multi-page TIFF</strong>, <strong>animated
+GIF</strong>, <strong>animated PNG</strong>, and <strong>multi-image HEIC/HEIF</strong>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">ocr</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">()</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">page</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;scan.djvu&quot;</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -1142,9 +1144,9 @@ carry more than one page are <strong>DjVu</strong>, <strong>multi-page TIFF</str
 works for everything - or just grab <code>recognize(...)[0]</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Only DjVu, TIFF, and GIF carry multiple pages here. PDFs aren't decoded
-directly - rasterize a page to one of the supported formats first (e.g. with
-<code>pdf2image</code> or <code>pymupdf</code>).</p>
+<p>Only DjVu, TIFF, GIF, animated PNG, and multi-image HEIC/HEIF carry multiple
+pages here. PDFs aren't decoded directly - rasterize a page to one of the
+supported formats first (e.g. with <code>pdf2image</code> or <code>pymupdf</code>).</p>
 </div>
 <h2 id="running-the-tests">Running the tests<a class="headerlink" href="#running-the-tests" title="Permanent link">&para;</a></h2>
 <p>The test suite mocks the native macOS Vision and Windows Runtime backends, so it

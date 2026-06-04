@@ -576,7 +576,8 @@ or WinRT async plumbing.</p>
 </code></pre></div>
 <p><code>recognize()</code> always returns a <code>list</code> - one <a href="api/#natocr.OCRResult"><code>OCRResult</code></a>
 per page. Most images are a single page, so reach for <code>pages[0]</code>; see
-<a href="usage/#multi-page-documents">Multi-page documents</a> for DjVu / TIFF / GIF.</p>
+<a href="usage/#multi-page-documents">Multi-page documents</a> for DjVu / TIFF / GIF /
+animated PNG / multi-image HEIC/HEIF.</p>
 <h3 id="bounding-boxes">Bounding Boxes<a class="headerlink" href="#bounding-boxes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">page</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;receipt.png&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
