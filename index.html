@@ -558,13 +558,14 @@ than third-party alternatives like Tesseract. <strong>natocr</strong> makes reac
 painless via one clean Python API instead of wrangling with Objective-C bridges
 or WinRT async plumbing.</p>
 <h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>macos<span class="o">]</span><span class="w">              </span><span class="c1"># on macOS</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>windows<span class="o">]</span><span class="w">            </span><span class="c1"># on Windows</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr
 </code></pre></div>
+<p>The right native backend (Vision on macOS, Windows Runtime OCR on Windows) is
+pulled in automatically for your platform - no OS-specific install command to
+pick.</p>
 <p>Add the <code>extras</code> group for JPEG XL and JPEG XR / HD Photo decoding (see
 <a href="usage/#supported-file-formats">supported file formats</a>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>macos,extras<span class="o">]</span><span class="w">       </span><span class="c1"># macOS + the extra image decoders</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>windows,extras<span class="o">]</span><span class="w">     </span><span class="c1"># Windows + the extra image decoders</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>extras<span class="o">]</span><span class="w">             </span><span class="c1"># + the extra image decoders</span>
 </code></pre></div>
 <h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">natocr</span><span class="w"> </span><span class="kn">import</span> <span class="n">OCR</span>
