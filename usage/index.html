@@ -945,7 +945,7 @@ in memory:</p>
 <h2 id="supported-file-formats">Supported file formats<a class="headerlink" href="#supported-file-formats" title="Permanent link">&para;</a></h2>
 <p>Images are decoded with <a href="https://python-pillow.org/">Pillow</a>, so any raster
 format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
-is provided by the bundled <a href="https://github.com/bigcat88/pillow_heif">pillow-heif</a>,
+(and AVIF) is provided by the bundled <a href="https://github.com/bigcat88/pillow_heif">pillow-heif</a>,
 so iPhone photos work with no extra setup. JPEG XL and JPEG XR need a couple of
 extra decoders from the optional <code>extras</code> group (see
 <a href="#jpeg-xl-and-jpeg-xr">JPEG XL and JPEG XR</a> below).</p>
@@ -1007,6 +1007,11 @@ extra decoders from the optional <code>extras</code> group (see
 <td>HEIC/HEIF</td>
 <td><code>.heic</code>, <code>.heif</code>, <code>.hif</code></td>
 <td>iPhone photos and screenshots</td>
+</tr>
+<tr>
+<td>AVIF</td>
+<td><code>.avif</code></td>
+<td>AV1-based, decoded via the bundled pillow-heif</td>
 </tr>
 <tr>
 <td>PPM/PGM</td>
