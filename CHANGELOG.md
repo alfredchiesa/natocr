@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.6.1 (2026-06-04)
+
+### Bug Fixes
+
+- Adds support for animated PNGs and HEIFs + updates docs
+  ([`46fea83`](https://github.com/alfredchiesa/natocr/commit/46fea830d7729ded474f214bd2df0e3772fa5dac))
+
+
 ## v1.6.0 (2026-06-04)
 
 ### Features
