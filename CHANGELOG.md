@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.6.0 (2026-06-04)
+
+### Features
+
+- Adds multipage and DjVu support
+  ([`eb29ca9`](https://github.com/alfredchiesa/natocr/commit/eb29ca971e602a685bae2c5ce62d0be90b7e3556))
+
+
 ## v1.5.6 (2026-06-04)
 
 ### Bug Fixes
