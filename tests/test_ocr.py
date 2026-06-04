@@ -15,9 +15,14 @@ from natocr.core import OCR
 def mock_backend(monkeypatch):
     """build an OCR on darwin with a mocked macos backend"""
     backend = MagicMock()
-    monkeypatch.setattr(core.sys, "platform", "darwin")
     monkeypatch.setattr(core, "MacOSOCR", MagicMock(return_value=backend))
-    return OCR(), backend
+    # only patch sys.platform while constructing OCR, then restore it. leaving it
+    # patched to darwin leaks into pytest's tmp_path fixture, whose get_user_id()
+    # then skips its win32 guard and calls os.getuid() - which blows up on windows.
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(core.sys, "platform", "darwin")
+        ocr = OCR()
+    return ocr, backend
 
 
 class TestBackendSelection:
