@@ -98,7 +98,7 @@ ocr.recognize(open("page.png", "rb").read())  # raw image bytes
 
 Images are decoded with [Pillow](https://python-pillow.org/), so any raster
 format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
-is provided by the bundled [pillow-heif](https://github.com/bigcat88/pillow_heif),
+(and AVIF) is provided by the bundled [pillow-heif](https://github.com/bigcat88/pillow_heif),
 so iPhone photos work with no extra setup. JPEG XL and JPEG XR need a couple of
 extra decoders - install them with `pip install natocr[extras]` (see
 [JPEG XL and JPEG XR](#jpeg-xl-and-jpeg-xr) below).
@@ -115,6 +115,7 @@ extra decoders - install them with `pip install natocr[extras]` (see
 | GIF | `.gif` | first frame is used |
 | WebP | `.webp` | modern lossy/lossless |
 | HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
+| AVIF | `.avif` | AV1-based, decoded via the bundled pillow-heif |
 | PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
 
 ### JPEG XL and JPEG XR

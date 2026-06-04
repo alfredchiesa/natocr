@@ -115,6 +115,22 @@ class TestConvertToPil:
         assert isinstance(out, Image.Image)
         assert out.size == (6, 6)
 
+    def test_avif_bytes(self, mock_backend):
+        ocr, _ = mock_backend
+        buf = io.BytesIO()
+        Image.new("RGB", (5, 5)).save(buf, format="AVIF")
+        out = ocr._convert_to_pil(buf.getvalue())
+        assert isinstance(out, Image.Image)
+        assert out.size == (5, 5)
+
+    def test_avif_path(self, mock_backend, tmp_path):
+        ocr, _ = mock_backend
+        path = tmp_path / "img.avif"
+        Image.new("RGB", (6, 6)).save(path)
+        out = ocr._convert_to_pil(str(path))
+        assert isinstance(out, Image.Image)
+        assert out.size == (6, 6)
+
     def test_jpeg2000_bytes(self, mock_backend):
         ocr, _ = mock_backend
         buf = io.BytesIO()

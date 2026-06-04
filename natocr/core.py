@@ -14,7 +14,8 @@ from .macos import MacOSOCR
 from .models import OCRResult
 from .windows import WindowsOCR
 
-# teach pillow to decode heic/heif so Image.open handles iphone photos too
+# teach pillow to decode heic/heif so Image.open handles iphone photos too.
+# this also registers .avif (libheif decodes both), so avif works for free.
 pillow_heif.register_heif_opener()
 
 # jpeg 2000 (.jp2 etc) is decoded by pillow natively, no setup needed.
