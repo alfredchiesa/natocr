@@ -110,6 +110,41 @@ class TestConvertToPil:
         assert isinstance(out, Image.Image)
         assert out.size == (6, 6)
 
+    def test_jpeg2000_bytes(self, mock_backend):
+        ocr, _ = mock_backend
+        buf = io.BytesIO()
+        Image.new("RGB", (5, 5)).save(buf, format="JPEG2000")
+        out = ocr._convert_to_pil(buf.getvalue())
+        assert isinstance(out, Image.Image)
+        assert out.size == (5, 5)
+
+    def test_jxl_bytes(self, mock_backend):
+        pytest.importorskip("pillow_jxl")
+        ocr, _ = mock_backend
+        buf = io.BytesIO()
+        Image.new("RGB", (5, 5)).save(buf, format="JXL")
+        out = ocr._convert_to_pil(buf.getvalue())
+        assert isinstance(out, Image.Image)
+        assert out.size == (5, 5)
+
+    def test_jxr_path(self, mock_backend, tmp_path):
+        imagecodecs = pytest.importorskip("imagecodecs")
+        ocr, _ = mock_backend
+        arr = np.zeros((6, 6, 3), dtype=np.uint8)
+        path = tmp_path / "img.jxr"
+        path.write_bytes(imagecodecs.jpegxr_encode(arr))
+        out = ocr._convert_to_pil(str(path))
+        assert isinstance(out, Image.Image)
+        assert out.size == (6, 6)
+
+    def test_jxr_bytes(self, mock_backend):
+        imagecodecs = pytest.importorskip("imagecodecs")
+        ocr, _ = mock_backend
+        arr = np.zeros((5, 7, 3), dtype=np.uint8)
+        out = ocr._convert_to_pil(imagecodecs.jpegxr_encode(arr))
+        assert isinstance(out, Image.Image)
+        assert out.size == (7, 5)
+
     def test_unsupported_type_raises(self, mock_backend):
         ocr, _ = mock_backend
         with pytest.raises(ValueError, match="unsupported image type"):

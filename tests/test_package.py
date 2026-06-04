@@ -1,10 +1,14 @@
 """tests for the package's public surface"""
 
+import re
+
 import natocr
 
 
 def test_version_exposed():
-    assert natocr.__version__ == "1.3.2"
+    # don't pin an exact value - semantic-release bumps it on each release
+    assert isinstance(natocr.__version__, str)
+    assert re.match(r"^\d+\.\d+\.\d+", natocr.__version__)
 
 
 def test_public_exports():

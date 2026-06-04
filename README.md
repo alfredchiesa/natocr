@@ -99,18 +99,38 @@ ocr.recognize(open("page.png", "rb").read())  # raw image bytes
 Images are decoded with [Pillow](https://python-pillow.org/), so any raster
 format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
 is provided by the bundled [pillow-heif](https://github.com/bigcat88/pillow_heif),
-so iPhone photos work with no extra setup.
+so iPhone photos work with no extra setup. JPEG XL and JPEG XR need a couple of
+extra decoders - install them with `pip install natocr[formats]` (see
+[JPEG XL and JPEG XR](#jpeg-xl-and-jpeg-xr) below).
 
 | Format | Extensions | Notes |
 | --- | --- | --- |
 | PNG | `.png` | recommended - lossless |
 | JPEG | `.jpg`, `.jpeg` | great for photos of documents |
+| JPEG 2000 | `.jp2`, `.j2k`, `.jpf`, `.jpx` | wavelet-based, decoded natively by Pillow |
+| JPEG XL | `.jxl` | modern successor to JPEG (needs `natocr[formats]`) |
+| JPEG XR / HD Photo | `.jxr`, `.wdp`, `.hdp` | Microsoft HD Photo (needs `natocr[formats]`) |
 | TIFF | `.tif`, `.tiff` | common for scans |
 | BMP | `.bmp` | uncompressed bitmap |
 | GIF | `.gif` | first frame is used |
 | WebP | `.webp` | modern lossy/lossless |
 | HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
 | PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
+
+### JPEG XL and JPEG XR
+
+These two are optional because their decoders are extra dependencies. Install
+them with:
+
+```bash
+pip install natocr[formats]
+```
+
+That pulls in [pillow-jxl-plugin](https://github.com/inflation/pillow-jxl-plugin)
+for `.jxl` and [imagecodecs](https://github.com/cgohlke/imagecodecs) for
+`.jxr`/`.wdp`/`.hdp`. Once installed they decode through the same `recognize()`
+call as every other format - no extra code. Without the extra, the rest of the
+formats above (including JPEG 2000) keep working unchanged.
 
 In addition to file paths, `recognize()` accepts these in-memory types:
 
