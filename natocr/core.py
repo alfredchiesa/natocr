@@ -19,7 +19,7 @@ pillow_heif.register_heif_opener()
 
 # jpeg 2000 (.jp2 etc) is decoded by pillow natively, no setup needed.
 
-# jpeg xl support is optional (pip install natocr[formats]); just importing the
+# jpeg xl support is optional (pip install natocr[extras]); just importing the
 # plugin registers a .jxl opener with pillow, same idea as pillow-heif above.
 try:
     import pillow_jxl  # noqa: F401
@@ -27,7 +27,7 @@ except ImportError:
     pass
 
 # jpeg xr / hd photo has no pillow plugin, so wire up a tiny opener backed by
-# imagecodecs when it's available (also part of the optional formats extra).
+# imagecodecs when it's available (also part of the optional extras group).
 try:
     import imagecodecs
 

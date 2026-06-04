@@ -16,6 +16,14 @@ pip install natocr[macos]              # on macOS
 pip install natocr[windows]            # on Windows
 ```
 
+Add the `extras` group for JPEG XL and JPEG XR / HD Photo decoding (see
+[supported file formats](usage.md#supported-file-formats)):
+
+```bash
+pip install natocr[macos,extras]       # macOS + the extra image decoders
+pip install natocr[windows,extras]     # Windows + the extra image decoders
+```
+
 ## Quick start
 
 ```python

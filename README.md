@@ -100,7 +100,7 @@ Images are decoded with [Pillow](https://python-pillow.org/), so any raster
 format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
 is provided by the bundled [pillow-heif](https://github.com/bigcat88/pillow_heif),
 so iPhone photos work with no extra setup. JPEG XL and JPEG XR need a couple of
-extra decoders - install them with `pip install natocr[formats]` (see
+extra decoders - install them with `pip install natocr[extras]` (see
 [JPEG XL and JPEG XR](#jpeg-xl-and-jpeg-xr) below).
 
 | Format | Extensions | Notes |
@@ -108,8 +108,8 @@ extra decoders - install them with `pip install natocr[formats]` (see
 | PNG | `.png` | recommended - lossless |
 | JPEG | `.jpg`, `.jpeg` | great for photos of documents |
 | JPEG 2000 | `.jp2`, `.j2k`, `.jpf`, `.jpx` | wavelet-based, decoded natively by Pillow |
-| JPEG XL | `.jxl` | modern successor to JPEG (needs `natocr[formats]`) |
-| JPEG XR / HD Photo | `.jxr`, `.wdp`, `.hdp` | Microsoft HD Photo (needs `natocr[formats]`) |
+| JPEG XL | `.jxl` | modern successor to JPEG (needs `natocr[extras]`) |
+| JPEG XR / HD Photo | `.jxr`, `.wdp`, `.hdp` | Microsoft HD Photo (needs `natocr[extras]`) |
 | TIFF | `.tif`, `.tiff` | common for scans |
 | BMP | `.bmp` | uncompressed bitmap |
 | GIF | `.gif` | first frame is used |
@@ -123,7 +123,7 @@ These two are optional because their decoders are extra dependencies. Install
 them with:
 
 ```bash
-pip install natocr[formats]
+pip install natocr[extras]
 ```
 
 That pulls in [pillow-jxl-plugin](https://github.com/inflation/pillow-jxl-plugin)

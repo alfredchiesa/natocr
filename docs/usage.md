@@ -152,12 +152,17 @@ ocr.recognize(open("page.png", "rb").read())  # raw image bytes
 Images are decoded with [Pillow](https://python-pillow.org/), so any raster
 format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
 is provided by the bundled [pillow-heif](https://github.com/bigcat88/pillow_heif),
-so iPhone photos work with no extra setup.
+so iPhone photos work with no extra setup. JPEG XL and JPEG XR need a couple of
+extra decoders from the optional `extras` group (see
+[JPEG XL and JPEG XR](#jpeg-xl-and-jpeg-xr) below).
 
 | Format | Extensions | Notes |
 | --- | --- | --- |
 | PNG | `.png` | recommended - lossless |
 | JPEG | `.jpg`, `.jpeg` | great for photos of documents |
+| JPEG 2000 | `.jp2`, `.j2k`, `.jpf`, `.jpx` | wavelet-based, decoded natively by Pillow |
+| JPEG XL | `.jxl` | modern successor to JPEG (needs `natocr[extras]`) |
+| JPEG XR / HD Photo | `.jxr`, `.wdp`, `.hdp` | Microsoft HD Photo (needs `natocr[extras]`) |
 | TIFF | `.tif`, `.tiff` | common for scans |
 | BMP | `.bmp` | uncompressed bitmap |
 | GIF | `.gif` | first frame is used |
@@ -168,6 +173,36 @@ so iPhone photos work with no extra setup.
 !!! note
     PDFs and other multi-page documents aren't decoded directly - rasterize a
     page to one of the formats above first (e.g. with `pdf2image` or `pymupdf`).
+
+### JPEG 2000
+
+JPEG 2000 (`.jp2`, `.j2k`, `.jpf`, `.jpx`) is decoded by Pillow itself, so it
+works out of the box with no extra dependencies.
+
+### JPEG XL and JPEG XR
+
+These two are optional because their decoders are extra dependencies. Install
+the `extras` group to enable them:
+
+```bash
+pip install natocr[extras]
+```
+
+That pulls in
+[pillow-jxl-plugin](https://github.com/inflation/pillow-jxl-plugin) for `.jxl`
+and [imagecodecs](https://github.com/cgohlke/imagecodecs) for
+`.jxr`/`.wdp`/`.hdp`. Once installed, both decode through the same `recognize()`
+call as every other format - no extra code:
+
+```python
+ocr.recognize("scan.jxl")              # JPEG XL
+ocr.recognize("photo.jxr")             # JPEG XR / HD Photo
+```
+
+!!! note
+    Without the `extras` group, the rest of the formats above (including
+    JPEG 2000) keep working unchanged - only `.jxl` and `.jxr`/`.wdp`/`.hdp`
+    require it.
 
 ## Running the tests
 
