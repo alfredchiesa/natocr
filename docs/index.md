@@ -39,7 +39,8 @@ Invoice #1042 Total $58.20 Thank you!
 
 `recognize()` always returns a `list` - one [`OCRResult`](api.md#natocr.OCRResult)
 per page. Most images are a single page, so reach for `pages[0]`; see
-[Multi-page documents](usage.md#multi-page-documents) for DjVu / TIFF / GIF.
+[Multi-page documents](usage.md#multi-page-documents) for DjVu / TIFF / GIF /
+animated PNG / multi-image HEIC/HEIF.
 
 ### Bounding Boxes
 

@@ -19,7 +19,8 @@ print(pages[0].text)
 Invoice #1042 Total $58.20 Thank you!
 ```
 
-Multi-page documents (DjVu, TIFF, GIF) give one result per page - see
+Multi-page/multi-frame inputs (DjVu, TIFF, GIF, animated PNG, multi-image
+HEIC/HEIF) give one result per frame - see
 [Multi-page documents](#multi-page-documents).
 
 ## Confidence scores and bounding boxes
@@ -89,11 +90,11 @@ macOS 15, the accurate recognizer supports (this is also natocr's hardcoded
 
 | | | | |
 | --- | --- | --- | --- |
+| `ar-SA` Arabic | `ars-SA` Najdi Arabic | | |
 | `en-US` English | `fr-FR` French | `it-IT` Italian | `de-DE` German |
 | `es-ES` Spanish | `pt-BR` Portuguese | `ru-RU` Russian | `uk-UA` Ukrainian |
 | `ko-KR` Korean | `ja-JP` Japanese | `zh-Hans` Chinese (Simplified) | `zh-Hant` Chinese (Traditional) |
 | `yue-Hans` Cantonese (Simplified) | `yue-Hant` Cantonese (Traditional) | `th-TH` Thai | `vi-VT` Vietnamese |
-| `ar-SA` Arabic | `ars-SA` Najdi Arabic | | |
 
 The exact list grows with newer macOS releases, so prefer the runtime query
 above over hard-coding it.
@@ -162,26 +163,26 @@ and [DjVu](#djvu) below).
 
 | Format | Extensions | Notes |
 | --- | --- | --- |
-| PNG | `.png` | recommended - lossless |
+| AVIF | `.avif` | AV1-based, decoded via the bundled pillow-heif |
+| BMP | `.bmp` | uncompressed bitmap |
+| DjVu | `.djvu`, `.djv` | scanned documents; **multi-page** (needs `natocr[extras]` + the djvulibre system library) |
+| GIF | `.gif` | **multi-frame** - one result per frame |
+| HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots; **multi-image** containers give one result per image |
 | JPEG | `.jpg`, `.jpeg` | great for photos of documents |
 | JPEG 2000 | `.jp2`, `.j2k`, `.jpf`, `.jpx` | wavelet-based, decoded natively by Pillow |
 | JPEG XL | `.jxl` | modern successor to JPEG (needs `natocr[extras]`) |
 | JPEG XR / HD Photo | `.jxr`, `.wdp`, `.hdp` | Microsoft HD Photo (needs `natocr[extras]`) |
-| TIFF | `.tif`, `.tiff` | common for scans; **multi-page** |
-| BMP | `.bmp` | uncompressed bitmap |
-| GIF | `.gif` | **multi-page** - one result per frame |
-| WebP | `.webp` | modern lossy/lossless |
-| HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
-| AVIF | `.avif` | AV1-based, decoded via the bundled pillow-heif |
-| PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
 | PCX | `.pcx` | legacy PC Paintbrush, common in old scan archives |
-| DjVu | `.djvu`, `.djv` | scanned documents; **multi-page** (needs `natocr[extras]` + the djvulibre system library) |
+| PNG | `.png` | recommended - lossless; **animated PNG** gives one result per frame |
+| PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
+| TIFF | `.tif`, `.tiff` | common for scans; **multi-page** |
+| WebP | `.webp` | modern lossy/lossless |
 
 !!! note
-    Multi-page DjVu, TIFF, and GIF are read page-by-page by
-    [`recognize()`](#multi-page-documents). PDFs aren't decoded directly -
-    rasterize a page to one of the formats above first (e.g. with `pdf2image` or
-    `pymupdf`).
+    Multi-page DjVu, TIFF, GIF, animated PNG, and multi-image HEIC/HEIF are read
+    frame-by-frame by [`recognize()`](#multi-page-documents). PDFs aren't decoded
+    directly - rasterize a page to one of the formats above first (e.g. with
+    `pdf2image` or `pymupdf`).
 
 ### JPEG 2000
 
@@ -246,7 +247,8 @@ format. Because DjVu is usually multi-page, see
 
 `recognize()` reads **every page** and returns one
 [`OCRResult`](api.md#natocr.OCRResult) per page, in order. The formats that can
-carry more than one page are **DjVu**, **multi-page TIFF**, and **animated GIF**:
+carry more than one frame/page are **DjVu**, **multi-page TIFF**, **animated
+GIF**, **animated PNG**, and **multi-image HEIC/HEIF**:
 
 ```python
 ocr = OCR()
@@ -260,9 +262,9 @@ Single-page inputs (PNG, JPEG, ...) return a one-element list, so the same loop
 works for everything - or just grab `recognize(...)[0]`.
 
 !!! note
-    Only DjVu, TIFF, and GIF carry multiple pages here. PDFs aren't decoded
-    directly - rasterize a page to one of the supported formats first (e.g. with
-    `pdf2image` or `pymupdf`).
+    Only DjVu, TIFF, GIF, animated PNG, and multi-image HEIC/HEIF carry multiple
+    pages here. PDFs aren't decoded directly - rasterize a page to one of the
+    supported formats first (e.g. with `pdf2image` or `pymupdf`).
 
 ## Running the tests
 

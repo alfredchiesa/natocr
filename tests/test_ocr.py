@@ -273,6 +273,30 @@ class TestRecognizeMultiPage:
         results = ocr.recognize(buf.getvalue())
         assert len(results) == 2
 
+    def test_animated_png_walks_every_frame(self, mock_backend):
+        # apng is just png with extra frames; pillow exposes them like a gif
+        ocr, backend = mock_backend
+        buf = io.BytesIO()
+        Image.new("RGB", (10, 10), (0, 0, 0)).save(
+            buf,
+            format="PNG",
+            save_all=True,
+            append_images=[Image.new("RGB", (10, 10), (255, 255, 255))],
+        )
+        results = ocr.recognize(buf.getvalue())
+        assert len(results) == 2
+
+    def test_multiframe_heif_one_result_per_image(self, mock_backend):
+        # a heic/heif container can hold several images; walk them all
+        ocr, backend = mock_backend
+        backend.recognize.side_effect = lambda page: page.size
+        buf = io.BytesIO()
+        Image.new("RGB", (20, 15)).save(
+            buf, format="HEIF", save_all=True, append_images=[Image.new("RGB", (7, 9))]
+        )
+        results = ocr.recognize(buf.getvalue())
+        assert results == [(20, 15), (7, 9)]
+
     @djvu_available
     def test_multipage_djvu(self, mock_backend, tmp_path):
         pytest.importorskip("djvu.decode")

@@ -38,8 +38,9 @@ Invoice #1042 Total $58.20 Thank you!
 ```
 
 `recognize()` always returns a `list` of `OCRResult` - one per page. Most images
-are a single page, so you'll often just read `pages[0]`; multi-page documents
-(DjVu, TIFF, GIF) give one result per page (see [Multi-page documents](#multi-page-documents)).
+are a single page, so you'll often just read `pages[0]`; multi-page/multi-frame
+inputs (DjVu, TIFF, GIF, animated PNG, multi-image HEIC/HEIF) give one result per
+frame (see [Multi-page documents](#multi-page-documents)).
 
 ### Confidence Scores and Bounding Boxes
 
@@ -118,14 +119,14 @@ decoders - install them with `pip install natocr[extras]` (see
 | AVIF | `.avif` | AV1-based, decoded via the bundled pillow-heif |
 | BMP | `.bmp` | uncompressed bitmap |
 | DjVu | `.djvu`, `.djv` | scanned documents; **multi-page** (needs `natocr[extras]` + the djvulibre system library) |
-| GIF | `.gif` | **multi-page** - one result per frame |
-| HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
+| GIF | `.gif` | **multi-frame** - one result per frame |
+| HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots; **multi-image** containers give one result per image |
 | JPEG | `.jpg`, `.jpeg` | great for photos of documents |
 | JPEG 2000 | `.jp2`, `.j2k`, `.jpf`, `.jpx` | wavelet-based, decoded natively by Pillow |
 | JPEG XL | `.jxl` | modern successor to JPEG (needs `natocr[extras]`) |
 | JPEG XR / HD Photo | `.jxr`, `.wdp`, `.hdp` | Microsoft HD Photo (needs `natocr[extras]`) |
 | PCX | `.pcx` | legacy PC Paintbrush, common in old scan archives |
-| PNG | `.png` | recommended - lossless |
+| PNG | `.png` | recommended - lossless; **animated PNG** gives one result per frame |
 | PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
 | TIFF | `.tif`, `.tiff` | common for scans; **multi-page** |
 | WebP | `.webp` | modern lossy/lossless |
@@ -166,8 +167,9 @@ on `PATH` (the wheel links against it).
 ### Multi-page documents
 
 `recognize()` reads **every page** and returns one `OCRResult` per page, in
-order. The formats that can carry more than one page are **DjVu**, **multi-page
-TIFF**, and **animated GIF**:
+order. The formats that can carry more than one frame/page are **DjVu**,
+**multi-page TIFF**, **animated GIF**, **animated PNG**, and **multi-image
+HEIC/HEIF**:
 
 ```python
 for i, page in enumerate(ocr.recognize("scan.djvu"), start=1):
@@ -188,9 +190,9 @@ In addition to file paths, `recognize()` accepts these in-memory types:
 | `bytes` (encoded image) | `ocr.recognize(data)` |
 
 > [!NOTE]
-> Only DjVu, TIFF, and GIF carry multiple pages here. PDFs aren't decoded
-> directly - rasterize a page to one of the formats above first (e.g. with
-> `pdf2image` or `pymupdf`).
+> Only DjVu, TIFF, GIF, animated PNG, and multi-image HEIC/HEIF carry multiple
+> pages here. PDFs aren't decoded directly - rasterize a page to one of the
+> formats above first (e.g. with `pdf2image` or `pymupdf`).
 
 ## Testing
 
