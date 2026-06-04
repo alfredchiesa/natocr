@@ -476,8 +476,30 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#djvu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DjVu
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-page-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-page documents
+      
+    </span>
+  </a>
   
 </li>
       
@@ -698,8 +720,30 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#djvu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DjVu
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-page-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-page documents
+      
+    </span>
+  </a>
   
 </li>
       
@@ -753,25 +797,28 @@
 
 <h1 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h1>
 <h2 id="basics">Basics<a class="headerlink" href="#basics" title="Permanent link">&para;</a></h2>
-<p>Create an <code>OCR</code> and call <code>recognize()</code>. It returns an
-<a href="../api/#natocr.OCRResult"><code>OCRResult</code></a>:</p>
+<p>Create an <code>OCR</code> and call <code>recognize()</code>. It returns a <code>list</code> of
+<a href="../api/#natocr.OCRResult"><code>OCRResult</code></a> - one per page. Most images are a single
+page, so you'll usually read <code>pages[0]</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">natocr</span><span class="w"> </span><span class="kn">import</span> <span class="n">OCR</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">ocr</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">()</span>                    <span class="c1"># defaults to english</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;invoice.png&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">pages</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;invoice.png&quot;</span><span class="p">)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">pages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Invoice #1042 Total $58.20 Thank you!
 </code></pre></div>
+<p>Multi-page documents (DjVu, TIFF, GIF) give one result per page - see
+<a href="#multi-page-documents">Multi-page documents</a>.</p>
 <h2 id="confidence-scores-and-bounding-boxes">Confidence scores and bounding boxes<a class="headerlink" href="#confidence-scores-and-bounding-boxes" title="Permanent link">&para;</a></h2>
-<p>Beyond the flat <code>.text</code>, you get a per-detection breakdown with bounding boxes
-and (on macOS) confidence scores:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;receipt.png&quot;</span><span class="p">)</span>
+<p>Beyond the flat <code>.text</code>, each page gives a per-detection breakdown with bounding
+boxes and (on macOS) confidence scores:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">page</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;receipt.png&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">confidence</span><span class="p">)</span>          <span class="c1"># average confidence, or None if unavailable</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">confidence</span><span class="p">)</span>            <span class="c1"># average confidence, or None if unavailable</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">box</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">bounds</span>   <span class="c1"># (x, y, width, height) in pixels</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">text</span><span class="si">!r}</span><span class="s2"> @ </span><span class="si">{</span><span class="n">box</span><span class="si">}</span><span class="s2"> conf=</span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">confidence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
@@ -786,9 +833,9 @@ and (on macOS) confidence scores:</p>
 there.</p>
 </div>
 <h2 id="lines-and-words">Lines and words<a class="headerlink" href="#lines-and-words" title="Permanent link">&para;</a></h2>
-<p>Convenience views group the result by reading order:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">result</span><span class="o">.</span><span class="n">lines</span>      <span class="c1"># [&#39;Acme Coffee&#39;, &#39;Latte $4.50&#39;]  - elements grouped into lines</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">result</span><span class="o">.</span><span class="n">words</span>      <span class="c1"># list of TextElement with non-empty text</span>
+<p>Convenience views group a page by reading order:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">page</span><span class="o">.</span><span class="n">lines</span>      <span class="c1"># [&#39;Acme Coffee&#39;, &#39;Latte $4.50&#39;]  - elements grouped into lines</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">page</span><span class="o">.</span><span class="n">words</span>      <span class="c1"># list of TextElement with non-empty text</span>
 </code></pre></div>
 <h2 id="detection-language">Detection language<a class="headerlink" href="#detection-language" title="Permanent link">&para;</a></h2>
 <p>Pick a recognition language, and inspect what the current platform supports:</p>
@@ -946,9 +993,9 @@ in memory:</p>
 <p>Images are decoded with <a href="https://python-pillow.org/">Pillow</a>, so any raster
 format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
 (and AVIF) is provided by the bundled <a href="https://github.com/bigcat88/pillow_heif">pillow-heif</a>,
-so iPhone photos work with no extra setup. JPEG XL and JPEG XR need a couple of
-extra decoders from the optional <code>extras</code> group (see
-<a href="#jpeg-xl-and-jpeg-xr">JPEG XL and JPEG XR</a> below).</p>
+so iPhone photos work with no extra setup. JPEG XL, JPEG XR, and DjVu need extra
+decoders from the optional <code>extras</code> group (see <a href="#jpeg-xl-and-jpeg-xr">JPEG XL and JPEG XR</a>
+and <a href="#djvu">DjVu</a> below).</p>
 <table>
 <thead>
 <tr>
@@ -986,7 +1033,7 @@ extra decoders from the optional <code>extras</code> group (see
 <tr>
 <td>TIFF</td>
 <td><code>.tif</code>, <code>.tiff</code></td>
-<td>common for scans</td>
+<td>common for scans; <strong>multi-page</strong></td>
 </tr>
 <tr>
 <td>BMP</td>
@@ -996,7 +1043,7 @@ extra decoders from the optional <code>extras</code> group (see
 <tr>
 <td>GIF</td>
 <td><code>.gif</code></td>
-<td>first frame is used</td>
+<td><strong>multi-page</strong> - one result per frame</td>
 </tr>
 <tr>
 <td>WebP</td>
@@ -1023,12 +1070,19 @@ extra decoders from the optional <code>extras</code> group (see
 <td><code>.pcx</code></td>
 <td>legacy PC Paintbrush, common in old scan archives</td>
 </tr>
+<tr>
+<td>DjVu</td>
+<td><code>.djvu</code>, <code>.djv</code></td>
+<td>scanned documents; <strong>multi-page</strong> (needs <code>natocr[extras]</code> + the djvulibre system library)</td>
+</tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>PDFs and other multi-page documents aren't decoded directly - rasterize a
-page to one of the formats above first (e.g. with <code>pdf2image</code> or <code>pymupdf</code>).</p>
+<p>Multi-page DjVu, TIFF, and GIF are read page-by-page by
+<a href="#multi-page-documents"><code>recognize()</code></a>. PDFs aren't decoded directly -
+rasterize a page to one of the formats above first (e.g. with <code>pdf2image</code> or
+<code>pymupdf</code>).</p>
 </div>
 <h3 id="jpeg-2000">JPEG 2000<a class="headerlink" href="#jpeg-2000" title="Permanent link">&para;</a></h3>
 <p>JPEG 2000 (<code>.jp2</code>, <code>.j2k</code>, <code>.jpf</code>, <code>.jpx</code>) is decoded by Pillow itself, so it
@@ -1052,22 +1106,62 @@ call as every other format - no extra code:</p>
 JPEG 2000) keep working unchanged - only <code>.jxl</code> and <code>.jxr</code>/<code>.wdp</code>/<code>.hdp</code>
 require it.</p>
 </div>
+<h3 id="djvu">DjVu<a class="headerlink" href="#djvu" title="Permanent link">&para;</a></h3>
+<p>DjVu (<code>.djvu</code>, <code>.djv</code>) is a format built for scanned text documents. Its decoder,
+<a href="https://pypi.org/project/djvulibre-python/">python-djvulibre</a>, is part of the
+<code>extras</code> group:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>extras<span class="o">]</span>
+</code></pre></div>
+<p>It also needs the system <strong>djvulibre</strong> library it builds against - this is the
+library python-djvulibre links to, and it isn't installable with <code>pip</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>brew<span class="w"> </span>install<span class="w"> </span>djvulibre<span class="w">             </span><span class="c1"># macOS</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libdjvulibre-dev<span class="w">  </span><span class="c1"># Debian/Ubuntu</span>
+</code></pre></div>
+<p>On Windows, install <a href="https://djvu.sourceforge.net/">DjVuLibre</a> so its DLLs are on
+<code>PATH</code>. Once set up, DjVu decodes through the same <code>recognize()</code> call as any other
+format. Because DjVu is usually multi-page, see
+<a href="#multi-page-documents">Multi-page documents</a> below.</p>
+<div class="admonition note">
+<p class="admonition-title">Graceful fallback</p>
+<p>If <code>natocr[extras]</code> or the <code>djvulibre</code> library isn't installed, DjVu simply
+isn't registered - opening a <code>.djvu</code> raises Pillow's usual
+<code>UnidentifiedImageError</code>, and every other format keeps working. Nothing else
+breaks.</p>
+</div>
+<h2 id="multi-page-documents">Multi-page documents<a class="headerlink" href="#multi-page-documents" title="Permanent link">&para;</a></h2>
+<p><code>recognize()</code> reads <strong>every page</strong> and returns one
+<a href="../api/#natocr.OCRResult"><code>OCRResult</code></a> per page, in order. The formats that can
+carry more than one page are <strong>DjVu</strong>, <strong>multi-page TIFF</strong>, and <strong>animated GIF</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">ocr</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">()</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">page</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;scan.djvu&quot;</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- page </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+<p>Single-page inputs (PNG, JPEG, ...) return a one-element list, so the same loop
+works for everything - or just grab <code>recognize(...)[0]</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only DjVu, TIFF, and GIF carry multiple pages here. PDFs aren't decoded
+directly - rasterize a page to one of the supported formats first (e.g. with
+<code>pdf2image</code> or <code>pymupdf</code>).</p>
+</div>
 <h2 id="running-the-tests">Running the tests<a class="headerlink" href="#running-the-tests" title="Permanent link">&para;</a></h2>
 <p>The test suite mocks the native macOS Vision and Windows Runtime backends, so it
 runs on any platform without those frameworks installed.</p>
 <p>Set up a virtualenv and install the dev extras:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </code></pre></div>
 <p>Run the full suite (coverage is configured in <code>pyproject.toml</code>, so it runs by
 default):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pytest
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pytest
 </code></pre></div>
 <p>Targeted runs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>pytest<span class="w"> </span>tests/test_ocr.py<span class="w">     </span><span class="c1"># one file</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>pytest<span class="w"> </span>-k<span class="w"> </span>convert<span class="w">            </span><span class="c1"># match tests by name</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>pytest<span class="w"> </span>-v<span class="w">                    </span><span class="c1"># verbose</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>pytest<span class="w"> </span>tests/test_ocr.py<span class="w">     </span><span class="c1"># one file</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>pytest<span class="w"> </span>-k<span class="w"> </span>convert<span class="w">            </span><span class="c1"># match tests by name</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>pytest<span class="w"> </span>-v<span class="w">                    </span><span class="c1"># verbose</span>
 </code></pre></div>
 <p>Coverage output is printed to the terminal and written to <code>htmlcov/index.html</code>
 and <code>coverage.xml</code>.</p>
