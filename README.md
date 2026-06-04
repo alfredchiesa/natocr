@@ -97,7 +97,9 @@ ocr.recognize(open("page.png", "rb").read())  # raw image bytes
 ## Supported File Types
 
 Images are decoded with [Pillow](https://python-pillow.org/), so any raster
-format Pillow can open works as an input file or byte string.
+format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
+is provided by the bundled [pillow-heif](https://github.com/bigcat88/pillow_heif),
+so iPhone photos work with no extra setup.
 
 | Format | Extensions | Notes |
 | --- | --- | --- |
@@ -107,6 +109,7 @@ format Pillow can open works as an input file or byte string.
 | BMP | `.bmp` | uncompressed bitmap |
 | GIF | `.gif` | first frame is used |
 | WebP | `.webp` | modern lossy/lossless |
+| HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
 | PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
 
 In addition to file paths, `recognize()` accepts these in-memory types:

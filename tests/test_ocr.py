@@ -94,6 +94,22 @@ class TestConvertToPil:
         assert isinstance(out, Image.Image)
         assert out.size == (6, 6)
 
+    def test_heif_bytes(self, mock_backend):
+        ocr, _ = mock_backend
+        buf = io.BytesIO()
+        Image.new("RGB", (5, 5)).save(buf, format="HEIF")
+        out = ocr._convert_to_pil(buf.getvalue())
+        assert isinstance(out, Image.Image)
+        assert out.size == (5, 5)
+
+    def test_heic_path(self, mock_backend, tmp_path):
+        ocr, _ = mock_backend
+        path = tmp_path / "img.heic"
+        Image.new("RGB", (6, 6)).save(path)
+        out = ocr._convert_to_pil(str(path))
+        assert isinstance(out, Image.Image)
+        assert out.size == (6, 6)
+
     def test_unsupported_type_raises(self, mock_backend):
         ocr, _ = mock_backend
         with pytest.raises(ValueError, match="unsupported image type"):

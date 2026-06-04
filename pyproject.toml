@@ -27,7 +27,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 requires-python = ">=3.10"
-dependencies = ["Pillow>=9.0.0", "numpy>=1.21"]
+dependencies = ["Pillow>=9.0.0", "numpy>=1.21", "pillow-heif>=0.13.0"]
 
 [project.optional-dependencies]
 macos = ["pyobjc-framework-Vision>=11.1", "pyobjc-framework-Quartz>=11.1"]

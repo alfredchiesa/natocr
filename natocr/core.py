@@ -7,11 +7,15 @@ import sys
 from typing import List, Union
 
 import numpy as np
+import pillow_heif
 from PIL import Image
 
 from .macos import MacOSOCR
 from .models import OCRResult
 from .windows import WindowsOCR
+
+# teach pillow to decode heic/heif so Image.open handles iphone photos too
+pillow_heif.register_heif_opener()
 
 
 class OCR:
