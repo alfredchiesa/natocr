@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.5.2 (2026-06-04)
+
+### Bug Fixes
+
+- Scopes `sys.platform` patch so `tmp_path` works on windows
+  ([`37ada83`](https://github.com/alfredchiesa/natocr/commit/37ada8399c12dddace111a21de3ff9d222c838d7))
+
+
 ## v1.5.1 (2026-06-04)
 
 ### Bug Fixes
