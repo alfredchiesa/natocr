@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.5.0 (2026-06-04)
+
+### Continuous Integration
+
+- Adds multi-os test workflow
+  ([`b2456a1`](https://github.com/alfredchiesa/natocr/commit/b2456a1293eca5312a10290706dd53fec21d1a4c))
+
+### Features
+
+- Adds JPEG 2000, JPEG XL, and JPEG XR/HD support
+  ([`a42c621`](https://github.com/alfredchiesa/natocr/commit/a42c62197a729b70cc8f7b62745ae16506b10fa0))
+
+
 ## v1.4.0 (2026-06-04)
 
 ### Features
