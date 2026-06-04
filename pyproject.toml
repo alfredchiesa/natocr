@@ -12,7 +12,7 @@ authors = [{ name = "alfredchiesa", email = "alfred.personal@icloud.com" }]
 maintainers = [{ name = "alfredchiesa", email = "alfred.personal@icloud.com" }]
 keywords = ["ocr", "text-recognition", "vision", "macos", "windows", "native"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: MacOS",
@@ -23,15 +23,22 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Image Processing",
     "Topic :: Scientific/Engineering :: Image Recognition",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 requires-python = ">=3.10"
-dependencies = ["Pillow>=9.0.0", "numpy>=1.21", "pillow-heif>=0.13.0"]
+dependencies = [
+    "Pillow>=9.0.0",
+    "numpy>=1.21",
+    "pillow-heif>=0.13.0",
+    # native backends are required, not optional - pip picks the right one per OS
+    "pyobjc-framework-Vision>=11.1; sys_platform == 'darwin'",
+    "pyobjc-framework-Quartz>=11.1; sys_platform == 'darwin'",
+    "pywin32>=311; sys_platform == 'win32'",
+]
 
 [project.optional-dependencies]
-macos = ["pyobjc-framework-Vision>=11.1", "pyobjc-framework-Quartz>=11.1"]
-windows = ["pywin32>=311"]
 extras = ["pillow-jxl-plugin>=1.3.0", "imagecodecs>=2024.1.1"]
 dev = [
     "pytest>=7.0.0",

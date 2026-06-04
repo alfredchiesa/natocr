@@ -14,7 +14,7 @@ from natocr import macos
 
 pytestmark = pytest.mark.skipif(
     sys.platform != "darwin" or not macos.VISION_AVAILABLE,
-    reason="requires macOS with the vision framework installed (natocr[macos])",
+    reason="requires macOS with the vision framework installed",
 )
 
 

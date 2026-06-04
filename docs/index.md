@@ -12,16 +12,18 @@ or WinRT async plumbing.
 ## Install
 
 ```bash
-pip install natocr[macos]              # on macOS
-pip install natocr[windows]            # on Windows
+pip install natocr
 ```
+
+The right native backend (Vision on macOS, Windows Runtime OCR on Windows) is
+pulled in automatically for your platform - no OS-specific install command to
+pick.
 
 Add the `extras` group for JPEG XL and JPEG XR / HD Photo decoding (see
 [supported file formats](usage.md#supported-file-formats)):
 
 ```bash
-pip install natocr[macos,extras]       # macOS + the extra image decoders
-pip install natocr[windows,extras]     # Windows + the extra image decoders
+pip install natocr[extras]             # + the extra image decoders
 ```
 
 ## Quick start

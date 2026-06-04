@@ -18,7 +18,7 @@ from natocr import windows
 
 pytestmark = pytest.mark.skipif(
     sys.platform != "win32" or not windows.WINDOWS_OCR_AVAILABLE,
-    reason="requires Windows with the runtime OCR available (natocr[windows])",
+    reason="requires Windows with the runtime OCR available",
 )
 
 

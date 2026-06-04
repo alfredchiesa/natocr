@@ -12,9 +12,15 @@ or WinRT async plumbing.
 ## Install
 
 ```bash
-pip install natocr[macos]      # on macOS
-pip install natocr[windows]    # on Windows
+pip install natocr
+
+# for JPEG XL & JPEG XK support
+pip install natocr[extras]
 ```
+
+The right native backend (Vision on macOS, Windows Runtime OCR on Windows) is
+pulled in automatically for your platform - no OS-specific install command to
+pick.
 
 ## Quick start
 
@@ -105,19 +111,19 @@ extra decoders - install them with `pip install natocr[extras]` (see
 
 | Format | Extensions | Notes |
 | --- | --- | --- |
-| PNG | `.png` | recommended - lossless |
+| AVIF | `.avif` | AV1-based, decoded via the bundled pillow-heif |
+| BMP | `.bmp` | uncompressed bitmap |
+| GIF | `.gif` | first frame is used |
+| HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
 | JPEG | `.jpg`, `.jpeg` | great for photos of documents |
 | JPEG 2000 | `.jp2`, `.j2k`, `.jpf`, `.jpx` | wavelet-based, decoded natively by Pillow |
 | JPEG XL | `.jxl` | modern successor to JPEG (needs `natocr[extras]`) |
 | JPEG XR / HD Photo | `.jxr`, `.wdp`, `.hdp` | Microsoft HD Photo (needs `natocr[extras]`) |
-| TIFF | `.tif`, `.tiff` | common for scans |
-| BMP | `.bmp` | uncompressed bitmap |
-| GIF | `.gif` | first frame is used |
-| WebP | `.webp` | modern lossy/lossless |
-| HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
-| AVIF | `.avif` | AV1-based, decoded via the bundled pillow-heif |
-| PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
 | PCX | `.pcx` | legacy PC Paintbrush, common in old scan archives |
+| PNG | `.png` | recommended - lossless |
+| PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
+| TIFF | `.tif`, `.tiff` | common for scans |
+| WebP | `.webp` | modern lossy/lossless |
 
 ### JPEG XL and JPEG XR
 

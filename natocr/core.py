@@ -93,14 +93,14 @@ class OCR:
                 self._backend = MacOSOCR(self.language)
             except ImportError:
                 raise RuntimeError(
-                    "macos dependencies not installed. install with: pip install natocr[macos]"
+                    "macos dependencies not installed. install with: pip install natocr"
                 )
         elif sys.platform == "win32":
             try:
                 self._backend = WindowsOCR(self.language)
             except ImportError:
                 raise RuntimeError(
-                    "windows dependencies not installed. install with: pip install natocr[windows]"
+                    "windows dependencies not installed. install with: pip install natocr"
                 )
         else:
             raise RuntimeError(f"unsupported platform: {sys.platform}")
