@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.5.3 (2026-06-04)
+
+### Bug Fixes
+
+- Renames `extras` group and documents new image formats
+  ([`f8c9b34`](https://github.com/alfredchiesa/natocr/commit/f8c9b344cf9490be0231e0e6605a374a62a798df))
+
+
 ## v1.5.2 (2026-06-04)
 
 ### Bug Fixes
