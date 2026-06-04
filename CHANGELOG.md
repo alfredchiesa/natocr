@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.5.4 (2026-06-04)
+
+### Bug Fixes
+
+- Ensures `AVIF` is noted and tested
+  ([`b252661`](https://github.com/alfredchiesa/natocr/commit/b2526619b2f6faadac5c0f87d9acf092c69a1922))
+
+
 ## v1.5.3 (2026-06-04)
 
 ### Bug Fixes
