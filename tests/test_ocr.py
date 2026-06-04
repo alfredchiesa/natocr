@@ -166,6 +166,23 @@ class TestConvertToPil:
         assert isinstance(out, Image.Image)
         assert out.size == (7, 5)
 
+    def test_pcx_bytes(self, mock_backend):
+        # pcx is a legacy paintbrush format pillow decodes natively
+        ocr, _ = mock_backend
+        buf = io.BytesIO()
+        Image.new("RGB", (5, 5)).save(buf, format="PCX")
+        out = ocr._convert_to_pil(buf.getvalue())
+        assert isinstance(out, Image.Image)
+        assert out.size == (5, 5)
+
+    def test_pcx_path(self, mock_backend, tmp_path):
+        ocr, _ = mock_backend
+        path = tmp_path / "img.pcx"
+        Image.new("RGB", (6, 6)).save(path)
+        out = ocr._convert_to_pil(str(path))
+        assert isinstance(out, Image.Image)
+        assert out.size == (6, 6)
+
     def test_unsupported_type_raises(self, mock_backend):
         ocr, _ = mock_backend
         with pytest.raises(ValueError, match="unsupported image type"):

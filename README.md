@@ -117,6 +117,7 @@ extra decoders - install them with `pip install natocr[extras]` (see
 | HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
 | AVIF | `.avif` | AV1-based, decoded via the bundled pillow-heif |
 | PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
+| PCX | `.pcx` | legacy PC Paintbrush, common in old scan archives |
 
 ### JPEG XL and JPEG XR
 

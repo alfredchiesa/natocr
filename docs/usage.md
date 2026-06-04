@@ -170,6 +170,7 @@ extra decoders from the optional `extras` group (see
 | HEIC/HEIF | `.heic`, `.heif`, `.hif` | iPhone photos and screenshots |
 | AVIF | `.avif` | AV1-based, decoded via the bundled pillow-heif |
 | PPM/PGM | `.ppm`, `.pgm` | netpbm bitmaps |
+| PCX | `.pcx` | legacy PC Paintbrush, common in old scan archives |
 
 !!! note
     PDFs and other multi-page documents aren't decoded directly - rasterize a
