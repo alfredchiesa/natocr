@@ -512,8 +512,52 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#natocr.OCRResult.text_lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        text_lines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natocr.OCRResult.paragraphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        paragraphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natocr.OCRResult.filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        filter
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#natocr.TextLine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TextLine
+      
+    </span>
+  </a>
   
 </li>
       
@@ -729,8 +773,52 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#natocr.OCRResult.text_lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        text_lines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natocr.OCRResult.paragraphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        paragraphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natocr.OCRResult.filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        filter
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#natocr.TextLine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TextLine
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1860,6 +1948,388 @@ are no elements.</p>
     </div>
 
 </div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="natocr.OCRResult.text_lines" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">text_lines</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#natocr.OCRResult.text_lines" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">text_lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TextLine</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Detected lines as <a class="autorefs autorefs-internal" title="natocr.TextLine
+
+
+  
+      dataclass
+  " href="#natocr.TextLine">TextLine</a> objects.</p>
+<p>Same grouping as <a class="autorefs autorefs-internal" title="lines
+
+
+  
+      property
+  " href="#natocr.OCRResult.lines">lines</a>, but each line carries
+its elements, an aggregated confidence (mean over the elements that
+report one), and the box that wraps them. Empty when there are no
+positioned elements.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="natocr.OCRResult.paragraphs" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">paragraphs</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#natocr.OCRResult.paragraphs" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">paragraphs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TextLine</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Lines merged into paragraphs by the vertical gaps between them.</p>
+<p>Walks the lines top-to-bottom and starts a new paragraph whenever the
+gap to the next line is more than ~1.5x the line's height. Each
+paragraph comes back in the same <a class="autorefs autorefs-internal" title="natocr.TextLine
+
+
+  
+      dataclass
+  " href="#natocr.TextLine">TextLine</a> shape - its
+<code>text</code> is the member lines joined by newlines, with <code>confidence</code> and
+<code>bounds</code> aggregated across all of their elements.</p>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="natocr.OCRResult.filter" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">filter</span>
+
+
+<a href="#natocr.OCRResult.filter" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">filter</span><span class="p">(</span><span class="n">min_confidence</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">drop_unknown</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OCRResult</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>A copy keeping only elements at or above <code>min_confidence</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>min_confidence</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>lowest confidence to keep, in <code>0.0..1.0</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>drop_unknown</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>what to do with elements that have no confidence
+(Windows OCR never reports one). <code>False</code> (the default) keeps
+them, since they can't be judged; <code>True</code> drops them.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="natocr.OCRResult
+
+
+  
+      dataclass
+   (natocr.models.OCRResult)" href="#natocr.OCRResult">OCRResult</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A new <a class="autorefs autorefs-internal" title="natocr.OCRResult
+
+
+  
+      dataclass
+  " href="#natocr.OCRResult">OCRResult</a> holding the surviving elements,</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="natocr.OCRResult
+
+
+  
+      dataclass
+   (natocr.models.OCRResult)" href="#natocr.OCRResult">OCRResult</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>with <code>text</code> and <code>confidence</code> recomputed from them.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>natocr/models.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#__codelineno-0-205">205</a></span>
+<span class="normal"><a href="#__codelineno-0-206">206</a></span>
+<span class="normal"><a href="#__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#__codelineno-0-229">229</a></span>
+<span class="normal"><a href="#__codelineno-0-230">230</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">min_confidence</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">drop_unknown</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;OCRResult&quot;</span><span class="p">:</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;A copy keeping only elements at or above ``min_confidence``.</span>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">        min_confidence: lowest confidence to keep, in ``0.0..1.0``.</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">        drop_unknown: what to do with elements that have no confidence</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">            (Windows OCR never reports one). ``False`` (the default) keeps</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">            them, since they can&#39;t be judged; ``True`` drops them.</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">        A new [OCRResult][natocr.OCRResult] holding the surviving elements,</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">        with ``text`` and ``confidence`` recomputed from them.</span>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-218" name="__codelineno-0-218"></a>    <span class="n">kept</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-219" name="__codelineno-0-219"></a>    <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a>        <span class="k">if</span> <span class="n">elem</span><span class="o">.</span><span class="n">confidence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">drop_unknown</span><span class="p">:</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a>                <span class="n">kept</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+<a id="__codelineno-0-223" name="__codelineno-0-223"></a>        <span class="k">elif</span> <span class="n">elem</span><span class="o">.</span><span class="n">confidence</span> <span class="o">&gt;=</span> <span class="n">min_confidence</span><span class="p">:</span>
+<a id="__codelineno-0-224" name="__codelineno-0-224"></a>            <span class="n">kept</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+<a id="__codelineno-0-225" name="__codelineno-0-225"></a>
+<a id="__codelineno-0-226" name="__codelineno-0-226"></a>    <span class="k">return</span> <span class="n">OCRResult</span><span class="p">(</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a>        <span class="n">text</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">kept</span><span class="p">),</span>
+<a id="__codelineno-0-228" name="__codelineno-0-228"></a>        <span class="n">confidence</span><span class="o">=</span><span class="n">_mean_confidence</span><span class="p">(</span><span class="n">kept</span><span class="p">),</span>
+<a id="__codelineno-0-229" name="__codelineno-0-229"></a>        <span class="n">elements</span><span class="o">=</span><span class="n">kept</span><span class="p">,</span>
+<a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="natocr.TextLine" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">natocr.TextLine</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#natocr.TextLine" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TextLine</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TextElement</span><span class="p">],</span> <span class="n">confidence</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">bounds</span><span class="p">:</span> <span class="n">BoundingBox</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>A run of detected text grouped into one line.</p>
+<p>The structured cousin of <a class="autorefs autorefs-internal" title="lines
+
+
+  
+      property
+  " href="#natocr.OCRResult.lines"><code>OCRResult.lines</code></a> - same
+grouping, but each line keeps its elements, an aggregated confidence, and
+the box that wraps them. Also the shape
+<a class="autorefs autorefs-internal" title="paragraphs
+
+
+  
+      property
+  " href="#natocr.OCRResult.paragraphs"><code>OCRResult.paragraphs</code></a> returns.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="natocr.TextLine.text">text</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>the line's text, its elements joined left-to-right.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="natocr.TextLine.elements">elements</span></code></td>
+            <td>
+                  <code><span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="natocr.TextElement
+
+
+  
+      dataclass
+   (natocr.models.TextElement)" href="#natocr.TextElement">TextElement</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>the detections that make up the line.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="natocr.TextLine.confidence">confidence</span></code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="float">float</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>mean confidence across the elements that report one, or
+<code>None</code> when none do (Windows OCR doesn't).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="natocr.TextLine.bounds">bounds</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="natocr.BoundingBox
+
+
+  
+      dataclass
+   (natocr.models.BoundingBox)" href="#natocr.BoundingBox">BoundingBox</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>the box enclosing every element in the line.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
 
 
 
