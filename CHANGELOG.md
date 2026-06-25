@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.0.1 (2026-06-25)
+
+### Bug Fixes
+
+- Includes changelog updates in `README.md` header
+  ([`95893ad`](https://github.com/alfredchiesa/natocr/commit/95893ade425316bf2459ca7262bc45c4d08c10ce))
+
+
 ## v2.0.0 (2026-06-25)
 
 ### Features
