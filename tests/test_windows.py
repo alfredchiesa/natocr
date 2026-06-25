@@ -1,5 +1,6 @@
 """tests for the windows runtime ocr backend, with winrt mocked out"""
 
+from concurrent.futures import ThreadPoolExecutor
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock
 
@@ -121,3 +122,31 @@ class TestRecognize:
         out = backend.recognize(Image.new("L", (8, 8)))
         assert out.text == "done"
         backend.engine.recognize_async.assert_awaited_once()
+
+    def test_concurrent_calls_each_get_their_own_loop(self, backend, monkeypatch):
+        # recognize() spins up its own event loop via asyncio.run, so firing it
+        # from several threads at once (as recognize_many does) must not trip over
+        # a shared loop. each worker thread gets a fresh loop and works fine.
+        writer = MagicMock()
+        writer.store_async = AsyncMock()
+        writer.flush_async = AsyncMock()
+        streams = MagicMock()
+        streams.DataWriter.return_value = writer
+        monkeypatch.setattr(windows, "streams", streams, raising=False)
+
+        decoder = MagicMock()
+        decoder.get_software_bitmap_async = AsyncMock(return_value="bitmap")
+        imaging = MagicMock()
+        imaging.BitmapDecoder.create_async = AsyncMock(return_value=decoder)
+        monkeypatch.setattr(windows, "imaging", imaging, raising=False)
+
+        backend.engine.recognize_async = AsyncMock(
+            return_value=SimpleNamespace(
+                lines=[make_line("ok", [SimpleNamespace(x=0, y=0, width=1, height=1)])]
+            )
+        )
+
+        imgs = [Image.new("RGB", (8, 8)) for _ in range(8)]
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            outs = list(pool.map(backend.recognize, imgs))
+        assert [o.text for o in outs] == ["ok"] * 8

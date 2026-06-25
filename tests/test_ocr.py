@@ -1,8 +1,11 @@
 """tests for the platform-detecting OCR facade in core.py"""
 
+import asyncio
 import io
 import shutil
 import subprocess
+import threading
+import time
 from unittest.mock import MagicMock
 
 import numpy as np
@@ -305,6 +308,70 @@ class TestRecognizeMultiPage:
         path = _make_djvu(tmp_path, [(40, 30), (24, 18)])
         results = ocr.recognize(path)
         assert results == [(40, 30), (24, 18)]
+
+
+class TestRecognizeMany:
+    def test_returns_one_result_list_per_input_in_order(self, mock_backend):
+        # each input is single-page here, so it comes back as a one-element list
+        ocr, backend = mock_backend
+        backend.recognize.side_effect = lambda page: page.size
+        imgs = [Image.new("RGB", (i, i)) for i in (2, 3, 4)]
+        results = ocr.recognize_many(imgs)
+        assert results == [[(2, 2)], [(3, 3)], [(4, 4)]]
+
+    def test_empty_input_returns_empty(self, mock_backend):
+        ocr, _ = mock_backend
+        assert ocr.recognize_many([]) == []
+
+    def test_bounded_concurrency_is_respected(self, mock_backend):
+        # track the peak number of in-flight recognize calls; it must stay under
+        # the requested bound
+        ocr, backend = mock_backend
+        active = 0
+        peak = 0
+        lock = threading.Lock()
+
+        def slow(page):
+            nonlocal active, peak
+            with lock:
+                active += 1
+                peak = max(peak, active)
+            time.sleep(0.02)
+            with lock:
+                active -= 1
+            return page.size
+
+        backend.recognize.side_effect = slow
+        imgs = [Image.new("RGB", (4, 4)) for _ in range(8)]
+        ocr.recognize_many(imgs, max_concurrency=2)
+        assert peak <= 2
+
+    def test_invalid_max_concurrency_raises(self, mock_backend):
+        ocr, _ = mock_backend
+        with pytest.raises(ValueError, match="max_concurrency"):
+            ocr.recognize_many([Image.new("RGB", (4, 4))], max_concurrency=0)
+
+
+class TestAsyncRecognize:
+    def test_arecognize_offloads_and_returns(self, mock_backend):
+        ocr, backend = mock_backend
+        sentinel = object()
+        backend.recognize.return_value = sentinel
+        img = Image.new("RGB", (4, 4))
+        result = asyncio.run(ocr.arecognize(img))
+        assert result == [sentinel]
+        backend.recognize.assert_called_once_with(img)
+
+    def test_arecognize_many_preserves_order(self, mock_backend):
+        ocr, backend = mock_backend
+        backend.recognize.side_effect = lambda page: page.size
+        imgs = [Image.new("RGB", (i, i)) for i in (2, 3, 4)]
+        results = asyncio.run(ocr.arecognize_many(imgs))
+        assert results == [[(2, 2)], [(3, 3)], [(4, 4)]]
+
+    def test_arecognize_many_empty_returns_empty(self, mock_backend):
+        ocr, _ = mock_backend
+        assert asyncio.run(ocr.arecognize_many([])) == []
 
 
 class TestProperties:

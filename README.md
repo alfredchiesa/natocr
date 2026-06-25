@@ -105,6 +105,36 @@ ocr.recognize(np.array(image))         # a numpy array (e.g. from OpenCV)
 ocr.recognize(open("page.png", "rb").read())  # raw image bytes
 ```
 
+### Batch and async
+
+`recognize()` handles one input at a time. For bulk jobs, `recognize_many()`
+runs many inputs concurrently with bounded parallelism. The native engines
+release the GIL while recognizing, so this gives real throughput instead of
+plodding through the list one by one:
+
+```python
+paths = ["page1.png", "page2.png", "page3.png"]
+
+results = ocr.recognize_many(paths, max_concurrency=4)
+for pages in results:          # one entry per input, in the same order
+    print(pages[0].text)       # each entry is a list of pages, like recognize()
+```
+
+`recognize_many()` accepts the same input types as `recognize()` (paths, PIL
+images, numpy arrays, bytes - mix and match), preserves input order, and
+defaults `max_concurrency` to the CPU count.
+
+There are also awaitable variants so OCR never blocks your event loop - drop
+them straight into FastAPI or any async server:
+
+```python
+result = await ocr.arecognize("page.png")          # one input
+results = await ocr.arecognize_many(paths)          # many, concurrently
+```
+
+`arecognize()` / `arecognize_many()` offload the blocking native call to a
+worker thread, so the calling coroutine stays responsive.
+
 ## Supported File Types
 
 Images are decoded with [Pillow](https://python-pillow.org/), so any raster

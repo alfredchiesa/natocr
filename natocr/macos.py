@@ -63,11 +63,18 @@ class MacOSOCR:
 
     def _setup_request(self):
         """setup vision text recognition request"""
-        self.request = VNRecognizeTextRequest.alloc().init()
+        # kept around for supported_languages; recognize() builds its own so
+        # concurrent calls don't clobber a shared request's results
+        self.request = self._make_request()
+
+    def _make_request(self):
+        """build a configured vision text recognition request"""
+        request = VNRecognizeTextRequest.alloc().init()
         # pyobjc needs the objc setters, plain attribute assignment is read-only
-        self.request.setRecognitionLanguages_([self.language])
-        self.request.setRecognitionLevel_(VNRequestTextRecognitionLevelAccurate)
-        self.request.setUsesLanguageCorrection_(True)
+        request.setRecognitionLanguages_([self.language])
+        request.setRecognitionLevel_(VNRequestTextRecognitionLevelAccurate)
+        request.setUsesLanguageCorrection_(True)
+        return request
 
     def recognize(self, image: Image.Image) -> OCRResult:
         """
@@ -82,17 +89,21 @@ class MacOSOCR:
         # convert pil image to nsdata for vision framework
         ns_image_data = self._pil_to_nsdata(image)
 
+        # fresh request per call so concurrent recognize_many workers don't share
+        # mutable result state
+        request = self._make_request()
+
         # create image request handler
         handler = VNImageRequestHandler.alloc().initWithData_options_(ns_image_data, {})
 
         # perform text recognition
-        success, error = handler.performRequests_error_([self.request], None)
+        success, error = handler.performRequests_error_([request], None)
 
         if not success:
             raise RuntimeError(f"vision framework error: {error}")
 
         # extract results
-        observations = self.request.results()
+        observations = request.results()
         if not observations:
             return OCRResult(text="", confidence=None, elements=[])
 

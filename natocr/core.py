@@ -2,11 +2,13 @@
 main ocr class with platform detection and delegation
 """
 
+import asyncio
 import io
 import os
 import sys
 import tempfile
-from typing import List, Union
+from concurrent.futures import ThreadPoolExecutor
+from typing import Iterable, List, Union
 
 import numpy as np
 import pillow_heif
@@ -218,6 +220,98 @@ class OCR:
             self._backend.recognize(page)
             for page in ImageSequence.Iterator(pil_image)
         ]
+
+    def recognize_many(
+        self,
+        images: Iterable[Union[str, Image.Image, np.ndarray, bytes]],
+        max_concurrency: int = None,
+    ) -> List[List[OCRResult]]:
+        """Recognize many inputs concurrently, with bounded parallelism.
+
+        Runs [recognize()][natocr.OCR.recognize] across a thread pool. The
+        native engines release the GIL while doing the actual recognition, so
+        threads give real throughput on bulk jobs instead of plodding through
+        the inputs one at a time.
+
+        Args:
+            images: an iterable of inputs, each one of the types
+                [recognize()][natocr.OCR.recognize] accepts.
+            max_concurrency: most inputs to process at once. Defaults to the
+                CPU count (never more workers than there are inputs).
+
+        Returns:
+            One result list per input, in the same order as ``images`` (each
+            element is itself a list of [OCRResult][natocr.OCRResult], one per
+            page - same shape [recognize()][natocr.OCR.recognize] returns).
+
+        Raises:
+            ValueError: if ``max_concurrency`` is less than 1.
+        """
+        images = list(images)
+        if not images:
+            return []
+        workers = self._resolve_concurrency(len(images), max_concurrency)
+        # map preserves input order and re-raises the first failure on iteration
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            return list(pool.map(self.recognize, images))
+
+    async def arecognize(
+        self, image: Union[str, Image.Image, np.ndarray, bytes]
+    ) -> List[OCRResult]:
+        """Awaitable [recognize()][natocr.OCR.recognize] for one input.
+
+        Offloads the blocking native call to a worker thread so it doesn't stall
+        the event loop - handy inside FastAPI or any async server.
+
+        Args:
+            image: same inputs [recognize()][natocr.OCR.recognize] accepts.
+
+        Returns:
+            One [OCRResult][natocr.OCRResult] per page, in page order.
+        """
+        return await asyncio.to_thread(self.recognize, image)
+
+    async def arecognize_many(
+        self,
+        images: Iterable[Union[str, Image.Image, np.ndarray, bytes]],
+        max_concurrency: int = None,
+    ) -> List[List[OCRResult]]:
+        """Awaitable [recognize_many()][natocr.OCR.recognize_many].
+
+        Same bounded-concurrency fan-out, but the blocking work runs on threads
+        off the event loop so the calling coroutine stays responsive.
+
+        Args:
+            images: an iterable of inputs, each one of the types
+                [recognize()][natocr.OCR.recognize] accepts.
+            max_concurrency: most inputs to process at once. Defaults to the
+                CPU count (never more workers than there are inputs).
+
+        Returns:
+            One result list per input, in the same order as ``images``.
+
+        Raises:
+            ValueError: if ``max_concurrency`` is less than 1.
+        """
+        images = list(images)
+        if not images:
+            return []
+        workers = self._resolve_concurrency(len(images), max_concurrency)
+        loop = asyncio.get_running_loop()
+        # gather keeps input order; the pool bounds how many run at once
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            tasks = [
+                loop.run_in_executor(pool, self.recognize, image) for image in images
+            ]
+            return await asyncio.gather(*tasks)
+
+    def _resolve_concurrency(self, count: int, max_concurrency: int) -> int:
+        """pick a worker count, never more than there are jobs"""
+        if max_concurrency is None:
+            return max(1, min(count, os.cpu_count() or 1))
+        if max_concurrency < 1:
+            raise ValueError("max_concurrency must be >= 1")
+        return min(count, max_concurrency)
 
     def _convert_to_pil(
         self, image: Union[str, Image.Image, np.ndarray, bytes]

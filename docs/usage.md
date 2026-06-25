@@ -152,6 +152,60 @@ ocr.recognize(open("page.png", "rb").read())  # raw image bytes
 | `numpy.ndarray` | `ocr.recognize(np.array(image))` |
 | `bytes` (encoded image) | `ocr.recognize(data)` |
 
+## Batch and async
+
+`recognize()` does one input at a time. When you've got a pile of images to get
+through, `recognize_many()` runs them concurrently with a worker pool. The native
+engines (Vision, Windows Runtime OCR) let go of the GIL while they're actually
+recognizing, so this is real parallelism, not just busywork - bulk jobs finish a
+lot quicker than looping `recognize()` yourself:
+
+```python
+paths = ["page1.png", "page2.png", "page3.png"]
+
+results = ocr.recognize_many(paths, max_concurrency=4)
+for pages in results:          # one entry per input, in the order you passed them
+    print(pages[0].text)       # each entry is itself a list of pages, like recognize()
+```
+
+It takes the same inputs `recognize()` does (paths, PIL images, numpy arrays,
+bytes - mix them freely), keeps everything in order, and `max_concurrency`
+defaults to the CPU count if you leave it off.
+
+### Awaitable variants
+
+There's `async`/`await` versions too, so OCR doesn't block your event loop. Handy
+when you're calling natocr from inside FastAPI or any async server - the request
+handler stays responsive while the recognition runs on a worker thread:
+
+```python
+result = await ocr.arecognize("page.png")     # one input
+results = await ocr.arecognize_many(paths)     # many, concurrently
+```
+
+`arecognize()` and `arecognize_many()` mirror their sync siblings exactly - same
+inputs, same return shape, same ordering - they just hand the blocking native
+call off to a thread so your coroutine keeps moving.
+
+```python
+import asyncio
+from fastapi import FastAPI, UploadFile
+from natocr import OCR
+
+app = FastAPI()
+ocr = OCR()
+
+@app.post("/ocr")
+async def read_image(file: UploadFile):
+    pages = await ocr.arecognize(await file.read())
+    return {"text": pages[0].text}
+```
+
+!!! note
+    This works the same on macOS and Windows. On Windows each worker spins up its
+    own event loop for the engine's async call, so concurrent recognition is safe
+    out of the box - nothing extra to set up.
+
 ## Supported file formats
 
 Images are decoded with [Pillow](https://python-pillow.org/), so any raster
