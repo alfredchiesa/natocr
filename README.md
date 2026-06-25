@@ -9,9 +9,9 @@ than third-party alternatives like Tesseract. **natocr** makes reaching for them
 painless via one clean Python API instead of wrangling with Objective-C bridges 
 or WinRT async plumbing.
 
-## Updates
+## Notable Updates
 
-- **v2.0.0** (2026-06-25) - batch & async support: [`recognize_many()`](#batch-and-async) plus awaitable `arecognize()` / `arecognize_many()` for concurrent, non-blocking OCR
+- **v2.0.0** (2026-06-25) - batch & async support: [`recognize_many()`](#batch-and-async) plus awaitable [`arecognize()`](#batch-and-async) / [`arecognize_many()`](#batch-and-async) for concurrent, non-blocking OCR
 - **v1.6.1** (2026-06-04) - animated PNG and multi-image HEIF support
 - **v1.6.0** (2026-06-04) - multi-page documents and DjVu support
 - **v1.5.0** (2026-06-04) - JPEG 2000, JPEG XL, and JPEG XR / HD Photo support
@@ -29,6 +29,9 @@ pip install natocr[extras]
 The right native backend (Vision on macOS, Windows Runtime OCR on Windows) is
 pulled in automatically for your platform - no OS-specific install command to
 pick.
+
+natocr ships a `py.typed` marker, so the public API is fully typed - mypy,
+pyright, and your editor pick up the hints with no stubs needed.
 
 ## Quick start
 
@@ -80,6 +83,32 @@ There's also convenience views for grouping a page by reading order:
 page.lines      # ['Acme Coffee', 'Latte $4.50']  - elements grouped into lines
 page.words      # list of TextElement with non-empty text
 ```
+
+Want the confidence and bounds for each line (not just the text)? `text_lines`
+gives you the same grouping as [`TextLine`](https://alfredchiesa.github.io/natocr/api/#natocr.TextLine)
+objects, and `paragraphs` merges lines into blocks by their vertical gaps - both
+aggregate confidence across their elements:
+
+```python
+for line in page.text_lines:
+    print(line.text, line.confidence, line.bounds.bounds)
+
+for para in page.paragraphs:   # lines joined by newlines, confidence averaged
+    print(para.confidence, para.text)
+```
+
+### Filtering by Confidence
+
+Drop the low-confidence noise with `filter()` - it hands back a new `OCRResult`
+keeping only detections at or above the threshold:
+
+```python
+clean = page.filter(0.8)       # only elements >= 0.8 confidence
+print(clean.text)
+```
+
+Elements without a confidence score (Windows OCR doesn't report one) are kept by
+default since they can't be judged - pass `drop_unknown=True` to drop them too.
 
 ### Detection Language
 

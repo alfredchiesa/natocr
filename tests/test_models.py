@@ -1,6 +1,8 @@
 """tests for the data models"""
 
-from natocr.models import BoundingBox, OCRResult, TextElement
+import pytest
+
+from natocr.models import BoundingBox, OCRResult, TextElement, TextLine
 
 
 class TestBoundingBox:
@@ -57,3 +59,83 @@ class TestOCRResult:
         # pass out of order to also exercise the (y, x) sort
         result = OCRResult(text="ignored", elements=[bottom, top])
         assert result.lines == ["top", "bottom"]
+
+
+class TestTextLines:
+    def test_aggregates_text_confidence_and_bounds_per_line(self):
+        a = TextElement(
+            text="hello", bounds=BoundingBox(0, 0, 10, 10), confidence=0.8
+        )
+        b = TextElement(
+            text="world", bounds=BoundingBox(20, 1, 10, 10), confidence=0.6
+        )
+        result = OCRResult(text="ignored", elements=[a, b])
+        lines = result.text_lines
+        assert len(lines) == 1
+        line = lines[0]
+        assert isinstance(line, TextLine)
+        assert line.text == "hello world"
+        assert line.confidence == pytest.approx(0.7)  # mean of 0.8 and 0.6
+        # union box wraps both elements
+        assert line.bounds.bounds == (0, 0, 30, 11)
+        assert line.elements == [a, b]
+
+    def test_confidence_ignores_missing_scores(self):
+        scored = TextElement(text="a", bounds=BoundingBox(0, 0, 10, 10), confidence=0.9)
+        unscored = TextElement(text="b", bounds=BoundingBox(12, 0, 10, 10))
+        result = OCRResult(text="ignored", elements=[scored, unscored])
+        # only the scored element counts toward the mean
+        assert result.text_lines[0].confidence == pytest.approx(0.9)
+
+    def test_confidence_none_when_no_scores(self):
+        elem = TextElement(text="a", bounds=BoundingBox(0, 0, 10, 10))
+        result = OCRResult(text="ignored", elements=[elem])
+        assert result.text_lines[0].confidence is None
+
+    def test_empty_without_elements(self):
+        assert OCRResult(text="just text").text_lines == []
+
+
+class TestParagraphs:
+    def test_groups_lines_by_vertical_gap(self):
+        # two stacked lines, then a big gap, then a third line
+        l1 = TextElement(text="one", bounds=BoundingBox(0, 0, 10, 10), confidence=0.9)
+        l2 = TextElement(text="two", bounds=BoundingBox(0, 12, 10, 10), confidence=0.7)
+        l3 = TextElement(text="far", bounds=BoundingBox(0, 100, 10, 10), confidence=0.5)
+        result = OCRResult(text="ignored", elements=[l1, l2, l3])
+        paras = result.paragraphs
+        assert len(paras) == 2
+        # first paragraph stacks the two close lines, newline-joined
+        assert paras[0].text == "one\ntwo"
+        assert paras[0].confidence == pytest.approx(0.8)  # mean of 0.9 and 0.7
+        assert paras[1].text == "far"
+
+    def test_empty_without_elements(self):
+        assert OCRResult(text="just text").paragraphs == []
+
+
+class TestFilter:
+    def _result(self):
+        high = TextElement(text="hi", bounds=BoundingBox(0, 0, 10, 10), confidence=0.9)
+        low = TextElement(text="lo", bounds=BoundingBox(0, 20, 10, 10), confidence=0.4)
+        unknown = TextElement(text="??", bounds=BoundingBox(0, 40, 10, 10))
+        return OCRResult(text="ignored", elements=[high, low, unknown]), high, unknown
+
+    def test_drops_below_threshold_keeps_unknown_by_default(self):
+        result, high, unknown = self._result()
+        out = result.filter(0.5)
+        # low (0.4) drops; high (0.9) and the unscored one stay
+        assert out.elements == [high, unknown]
+        assert out.text == "hi ??"
+        assert out.confidence == pytest.approx(0.9)  # unknown ignored in the mean
+
+    def test_drop_unknown_removes_unscored_elements(self):
+        result, high, _ = self._result()
+        out = result.filter(0.5, drop_unknown=True)
+        assert out.elements == [high]
+
+    def test_returns_new_result_without_mutating(self):
+        result, _, _ = self._result()
+        out = result.filter(0.5)
+        assert out is not result
+        assert len(result.elements) == 3  # original untouched

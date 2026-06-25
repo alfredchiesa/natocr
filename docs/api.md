@@ -11,6 +11,8 @@ top-level package, e.g. `from natocr import OCR`.
 
 ::: natocr.OCRResult
 
+::: natocr.TextLine
+
 ::: natocr.TextElement
 
 ::: natocr.BoundingBox

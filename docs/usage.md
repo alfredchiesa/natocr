@@ -47,7 +47,9 @@ for element in page.elements:
 
 !!! note
     Windows Runtime OCR doesn't report confidence, so `confidence` is `None`
-    there.
+    there. natocr still reads it best-effort - if a future Windows build ever
+    exposes a score, you'll get it - but for now treat Windows confidence as
+    unavailable.
 
 ## Lines and words
 
@@ -56,6 +58,48 @@ Convenience views group a page by reading order:
 ```python
 page.lines      # ['Acme Coffee', 'Latte $4.50']  - elements grouped into lines
 page.words      # list of TextElement with non-empty text
+```
+
+### Line and paragraph confidence
+
+`lines` gives you plain strings. When you want the confidence and bounds too,
+reach for `text_lines` - same grouping, but each line comes back as a
+[`TextLine`](api.md#natocr.TextLine) with its elements, an aggregated confidence
+(the mean over the elements that report one), and the box that wraps them:
+
+```python
+for line in page.text_lines:
+    print(line.text, line.confidence, line.bounds.bounds)
+```
+
+`paragraphs` goes one level up, merging lines into blocks wherever there's a big
+vertical gap. Each paragraph uses the same `TextLine` shape - its text is the
+member lines joined by newlines, with confidence and bounds aggregated across
+all of them:
+
+```python
+for para in page.paragraphs:
+    print(f"[{para.confidence}]")
+    print(para.text)
+```
+
+## Filtering by confidence
+
+`filter()` returns a fresh [`OCRResult`](api.md#natocr.OCRResult) holding only the
+detections at or above a confidence threshold - handy for throwing out the
+low-confidence noise before you use the text:
+
+```python
+clean = page.filter(0.8)       # keep elements >= 0.8 confidence
+print(clean.text)              # text/confidence are recomputed from what's left
+```
+
+Elements with no confidence score are kept by default - they can't be judged, so
+filtering them out would be guessing. On Windows that means `filter()` is a
+no-op unless you opt in:
+
+```python
+page.filter(0.8, drop_unknown=True)   # also drop elements with no score
 ```
 
 ## Detection language
@@ -319,6 +363,19 @@ works for everything - or just grab `recognize(...)[0]`.
     Only DjVu, TIFF, GIF, animated PNG, and multi-image HEIC/HEIF carry multiple
     pages here. PDFs aren't decoded directly - rasterize a page to one of the
     supported formats first (e.g. with `pdf2image` or `pymupdf`).
+
+## Type hints
+
+The whole public API is typed, and natocr ships a `py.typed` marker
+([PEP 561](https://peps.python.org/pep-0561/)), so mypy, pyright, and your editor
+read the hints straight from the package - no stub packages, no extra install:
+
+```python
+from natocr import OCR, OCRResult, TextLine
+
+pages: list[OCRResult] = OCR().recognize("page.png")
+lines: list[TextLine] = pages[0].text_lines
+```
 
 ## Running the tests
 

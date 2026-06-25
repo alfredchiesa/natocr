@@ -64,6 +64,10 @@ Changelog = "https://github.com/alfredchiesa/natocr/blob/main/CHANGELOG.md"
 where = ["."]
 include = ["natocr*"]
 
+[tool.setuptools.package-data]
+# ship the pep 561 marker so downstream mypy/editors pick up our type hints
+natocr = ["py.typed"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

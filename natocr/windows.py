@@ -123,14 +123,13 @@ class WindowsOCR:
         """process windows ocr result into ocr result"""
         elements = []
         full_text_parts = []
-        total_confidence = 0.0
-        valid_lines = 0
 
         for line in result.lines:
             line_text = line.text
             if line_text.strip():
-                # get line bounding box
-                bbox = line.words[0].bounding_rect if line.words else line.bounding_rect
+                # word rect when we have one, else the line rect
+                source = line.words[0] if line.words else line
+                bbox = source.bounding_rect
 
                 # convert to pixel coordinates
                 x = bbox.x
@@ -138,21 +137,30 @@ class WindowsOCR:
                 width = bbox.width
                 height = bbox.height
 
+                # winrt ocr doesn't expose confidence today, so this is None in
+                # practice - but grab it best-effort in case a build ever does
+                confidence = getattr(source, "confidence", None)
+
                 # create bounding box and text element
                 bounds = BoundingBox(x=x, y=y, width=width, height=height)
-                element = TextElement(text=line_text, bounds=bounds, confidence=None)
+                element = TextElement(
+                    text=line_text, bounds=bounds, confidence=confidence
+                )
                 elements.append(element)
 
                 # accumulate text
                 full_text_parts.append(line_text)
-                valid_lines += 1
 
         # join text parts
         full_text = " ".join(full_text_parts)
 
+        # mean of whatever confidences exist (none today), mirroring macos
+        scores = [e.confidence for e in elements if e.confidence is not None]
+        avg_confidence = sum(scores) / len(scores) if scores else None
+
         return OCRResult(
             text=full_text,
-            confidence=None,  # windows ocr doesn't provide confidence scores
+            confidence=avg_confidence,
             elements=elements,
         )
 
