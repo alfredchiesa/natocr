@@ -9,7 +9,7 @@ this package provides ocr functionality using native frameworks:
 from .core import OCR
 from .models import BoundingBox, OCRResult, TextElement, TextLine
 
-__version__ = "2.1.1"
+__version__ = "2.1.0"
 __author__ = "alfredchiesa"
 __email__ = "alfred.personal@icloud.com"
 

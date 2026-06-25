@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.1.0 (2026-06-25)
+
+### Features
+
+- Confidence helpers, line/paragraph aggregation and `py.typed` marker
+  ([`bcae7df`](https://github.com/alfredchiesa/natocr/commit/bcae7dfe060eb4612c3595aeec345938426ff048))
+
+
 ## v2.0.1 (2026-06-25)
 
 ### Bug Fixes
