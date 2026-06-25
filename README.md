@@ -12,7 +12,7 @@ or WinRT async plumbing.
 ## Notable Updates
 
 - **v2.1.0** (2026-06-25) - confidence helpers and line + paragraph aggregation
-- **v2.0.0** (2026-06-22) - batch & async support: [`recognize_many()`](#batch-and-async) plus awaitable [`arecognize()`](#batch-and-async) / [`arecognize_many()`](#batch-and-async) for concurrent, non-blocking OCR
+- **v2.0.0** (2026-06-22) - batch & non-blocking async support
 - **v1.6.1** (2026-06-04) - animated PNG and multi-image HEIF support
 - **v1.6.0** (2026-06-04) - multi-page documents and DjVu support
 - **v1.5.0** (2026-06-04) - JPEG 2000, JPEG XL, and JPEG XR / HD Photo support
@@ -39,7 +39,7 @@ pyright, and your editor pick up the hints with no stubs needed.
 ```python
 from natocr import OCR
 
-ocr = OCR()                    # defaults to english
+ocr = OCR()                            # defaults to english
 pages = ocr.recognize("invoice.png")   # one OCRResult per page
 
 print(pages[0].text)
@@ -62,10 +62,10 @@ bounding boxes and (*on macOS*) confidence scores:
 ```python
 page = ocr.recognize("receipt.png")[0]   # first (often only) page
 
-print(page.confidence)            # average confidence, or None if unavailable
+print(page.confidence)                   # avg confidence, or None
 
 for element in page.elements:
-    box = element.bounds.bounds   # (x, y, width, height) in pixels
+    box = element.bounds.bounds          # (x, y, width, height) in pixels
     print(f"{element.text!r} @ {box} conf={element.confidence}")
 ```
 
@@ -104,7 +104,7 @@ Drop the low-confidence noise with `filter()` - it hands back a new `OCRResult`
 keeping only detections at or above the threshold:
 
 ```python
-clean = page.filter(0.8)       # only elements >= 0.8 confidence
+clean = page.filter(0.8)               # only elements >= 0.8 confidence
 print(clean.text)
 ```
 
@@ -118,8 +118,8 @@ supports:
 
 ```python
 ocr = OCR(language="fr")
-print(ocr.platform)               # 'darwin' or 'win32'
-print(ocr.supported_languages)    # ['en-US', 'fr-FR', 'de-DE', ...]
+print(ocr.platform)                    # 'darwin' or 'win32'
+print(ocr.supported_languages)         # ['en-US', 'fr-FR', 'de-DE', ...]
 ```
 
 The supported set is decided by the OS and queried live, so
@@ -166,8 +166,8 @@ There are also awaitable variants so OCR never blocks your event loop - drop
 them straight into FastAPI or any async server:
 
 ```python
-result = await ocr.arecognize("page.png")          # one input
-results = await ocr.arecognize_many(paths)          # many, concurrently
+result = await ocr.arecognize("page.png")        # one input
+results = await ocr.arecognize_many(paths)       # many, concurrently
 ```
 
 `arecognize()` / `arecognize_many()` offload the blocking native call to a
@@ -219,8 +219,8 @@ formats above (including JPEG 2000) keep working unchanged.
 against:
 
 ```bash
-brew install djvulibre         # macOS
-sudo apt install libdjvulibre-dev   # Debian/Ubuntu
+brew install djvulibre                # macOS
+sudo apt install libdjvulibre-dev     # Debian/Ubuntu
 ```
 
 On Windows, install [DjVuLibre](https://djvu.sourceforge.net/) so its DLLs land
