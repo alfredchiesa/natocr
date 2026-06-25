@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.0.0 (2026-06-25)
+
+### Features
+
+- Adds batch and async recognition apis
+  ([`0e78417`](https://github.com/alfredchiesa/natocr/commit/0e78417059f3f5eaefcf13f13e036c631f9830c7))
+
+
 ## v1.6.1 (2026-06-04)
 
 ### Bug Fixes
