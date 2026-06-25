@@ -429,6 +429,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#natocr.OCR.recognize_many" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        recognize_many
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natocr.OCR.arecognize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        arecognize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natocr.OCR.arecognize_many" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        arecognize_many
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -607,6 +640,39 @@
     <span class="md-ellipsis">
       
         recognize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natocr.OCR.recognize_many" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        recognize_many
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natocr.OCR.arecognize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        arecognize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natocr.OCR.arecognize_many" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        arecognize_many
       
     </span>
   </a>
@@ -827,13 +893,13 @@ OCR dependencies aren't installed.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>natocr/core.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-166">166</a></span>
-<span class="normal"><a href="#__codelineno-0-167">167</a></span>
-<span class="normal"><a href="#__codelineno-0-168">168</a></span>
-<span class="normal"><a href="#__codelineno-0-169">169</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">):</span>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="n">language</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="kc">None</span>
-<a id="__codelineno-0-169" name="__codelineno-0-169"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_backend</span><span class="p">()</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-168">168</a></span>
+<span class="normal"><a href="#__codelineno-0-169">169</a></span>
+<span class="normal"><a href="#__codelineno-0-170">170</a></span>
+<span class="normal"><a href="#__codelineno-0-171">171</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-169" name="__codelineno-0-169"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="n">language</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_backend</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -1029,9 +1095,7 @@ and animated GIF - give one <a class="autorefs autorefs-internal" title="natocr.
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>natocr/core.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-190">190</a></span>
-<span class="normal"><a href="#__codelineno-0-191">191</a></span>
-<span class="normal"><a href="#__codelineno-0-192">192</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-192">192</a></span>
 <span class="normal"><a href="#__codelineno-0-193">193</a></span>
 <span class="normal"><a href="#__codelineno-0-194">194</a></span>
 <span class="normal"><a href="#__codelineno-0-195">195</a></span>
@@ -1059,37 +1123,585 @@ and animated GIF - give one <a class="autorefs autorefs-internal" title="natocr.
 <span class="normal"><a href="#__codelineno-0-217">217</a></span>
 <span class="normal"><a href="#__codelineno-0-218">218</a></span>
 <span class="normal"><a href="#__codelineno-0-219">219</a></span>
-<span class="normal"><a href="#__codelineno-0-220">220</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="k">def</span><span class="w"> </span><span class="nf">recognize</span><span class="p">(</span>
-<a id="__codelineno-0-191" name="__codelineno-0-191"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
-<a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OCRResult</span><span class="p">]:</span>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Recognize text on every page of an image or document.</span>
-<a id="__codelineno-0-194" name="__codelineno-0-194"></a>
-<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">    Reads each page in order and returns one result per page. Single-page</span>
-<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    inputs (a PNG, a JPEG, ...) come back as a one-element list, so you can</span>
-<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">    always iterate the result. Multi-page formats - DjVu, multi-page TIFF,</span>
-<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    and animated GIF - give one [OCRResult][natocr.OCRResult] per page.</span>
-<a id="__codelineno-0-199" name="__codelineno-0-199"></a>
-<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">        image: what to read. One of: a file path (``str``), a</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">            ``PIL.Image.Image``, a ``numpy.ndarray``, or raw encoded image</span>
-<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">            ``bytes``.</span>
-<a id="__codelineno-0-204" name="__codelineno-0-204"></a>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">        One [OCRResult][natocr.OCRResult] per page, in page order. At least</span>
-<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">        one element for any valid input.</span>
-<a id="__codelineno-0-208" name="__codelineno-0-208"></a>
-<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">        ValueError: if ``image`` isn&#39;t one of the supported types.</span>
-<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-212" name="__codelineno-0-212"></a>    <span class="c1"># convert input to pil image for consistent processing</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a>    <span class="n">pil_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_to_pil</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-<a id="__codelineno-0-214" name="__codelineno-0-214"></a>
-<a id="__codelineno-0-215" name="__codelineno-0-215"></a>    <span class="c1"># ImageSequence.Iterator walks frames/pages for any multi-frame format;</span>
-<a id="__codelineno-0-216" name="__codelineno-0-216"></a>    <span class="c1"># single-page inputs simply yield one frame</span>
-<a id="__codelineno-0-217" name="__codelineno-0-217"></a>    <span class="k">return</span> <span class="p">[</span>
-<a id="__codelineno-0-218" name="__codelineno-0-218"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
-<a id="__codelineno-0-219" name="__codelineno-0-219"></a>        <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">ImageSequence</span><span class="o">.</span><span class="n">Iterator</span><span class="p">(</span><span class="n">pil_image</span><span class="p">)</span>
-<a id="__codelineno-0-220" name="__codelineno-0-220"></a>    <span class="p">]</span>
+<span class="normal"><a href="#__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#__codelineno-0-222">222</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="k">def</span><span class="w"> </span><span class="nf">recognize</span><span class="p">(</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OCRResult</span><span class="p">]:</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Recognize text on every page of an image or document.</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">    Reads each page in order and returns one result per page. Single-page</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    inputs (a PNG, a JPEG, ...) come back as a one-element list, so you can</span>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">    always iterate the result. Multi-page formats - DjVu, multi-page TIFF,</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    and animated GIF - give one [OCRResult][natocr.OCRResult] per page.</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">        image: what to read. One of: a file path (``str``), a</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">            ``PIL.Image.Image``, a ``numpy.ndarray``, or raw encoded image</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">            ``bytes``.</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">        One [OCRResult][natocr.OCRResult] per page, in page order. At least</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">        one element for any valid input.</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">        ValueError: if ``image`` isn&#39;t one of the supported types.</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a>    <span class="c1"># convert input to pil image for consistent processing</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215"></a>    <span class="n">pil_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_to_pil</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a>    <span class="c1"># ImageSequence.Iterator walks frames/pages for any multi-frame format;</span>
+<a id="__codelineno-0-218" name="__codelineno-0-218"></a>    <span class="c1"># single-page inputs simply yield one frame</span>
+<a id="__codelineno-0-219" name="__codelineno-0-219"></a>    <span class="k">return</span> <span class="p">[</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a>        <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">ImageSequence</span><span class="o">.</span><span class="n">Iterator</span><span class="p">(</span><span class="n">pil_image</span><span class="p">)</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a>    <span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="natocr.OCR.recognize_many" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">recognize_many</span>
+
+
+<a href="#natocr.OCR.recognize_many" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">recognize_many</span><span class="p">(</span><span class="n">images</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]],</span> <span class="n">max_concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">OCRResult</span><span class="p">]]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Recognize many inputs concurrently, with bounded parallelism.</p>
+<p>Runs <a class="autorefs autorefs-internal" title="recognize" href="#natocr.OCR.recognize">recognize()</a> across a thread pool. The
+native engines release the GIL while doing the actual recognition, so
+threads give real throughput on bulk jobs instead of plodding through
+the inputs one at a time.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>images</code>
+            </td>
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="typing.Union">Union</span>[<span title="str">str</span>, <span title="PIL.Image.Image">Image</span>, <span title="numpy.ndarray">ndarray</span>, <span title="bytes">bytes</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>an iterable of inputs, each one of the types
+<a class="autorefs autorefs-internal" title="recognize" href="#natocr.OCR.recognize">recognize()</a> accepts.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_concurrency</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>most inputs to process at once. Defaults to the
+CPU count (never more workers than there are inputs).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.List">List</span>[<span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="natocr.OCRResult
+
+
+  
+      dataclass
+   (natocr.models.OCRResult)" href="#natocr.OCRResult">OCRResult</a>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>One result list per input, in the same order as <code>images</code> (each</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.List">List</span>[<span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="natocr.OCRResult
+
+
+  
+      dataclass
+   (natocr.models.OCRResult)" href="#natocr.OCRResult">OCRResult</a>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>element is itself a list of <a class="autorefs autorefs-internal" title="natocr.OCRResult
+
+
+  
+      dataclass
+  " href="#natocr.OCRResult">OCRResult</a>, one per</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.List">List</span>[<span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="natocr.OCRResult
+
+
+  
+      dataclass
+   (natocr.models.OCRResult)" href="#natocr.OCRResult">OCRResult</a>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>page - same shape <a class="autorefs autorefs-internal" title="recognize" href="#natocr.OCR.recognize">recognize()</a> returns).</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>if <code>max_concurrency</code> is less than 1.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>natocr/core.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#__codelineno-0-229">229</a></span>
+<span class="normal"><a href="#__codelineno-0-230">230</a></span>
+<span class="normal"><a href="#__codelineno-0-231">231</a></span>
+<span class="normal"><a href="#__codelineno-0-232">232</a></span>
+<span class="normal"><a href="#__codelineno-0-233">233</a></span>
+<span class="normal"><a href="#__codelineno-0-234">234</a></span>
+<span class="normal"><a href="#__codelineno-0-235">235</a></span>
+<span class="normal"><a href="#__codelineno-0-236">236</a></span>
+<span class="normal"><a href="#__codelineno-0-237">237</a></span>
+<span class="normal"><a href="#__codelineno-0-238">238</a></span>
+<span class="normal"><a href="#__codelineno-0-239">239</a></span>
+<span class="normal"><a href="#__codelineno-0-240">240</a></span>
+<span class="normal"><a href="#__codelineno-0-241">241</a></span>
+<span class="normal"><a href="#__codelineno-0-242">242</a></span>
+<span class="normal"><a href="#__codelineno-0-243">243</a></span>
+<span class="normal"><a href="#__codelineno-0-244">244</a></span>
+<span class="normal"><a href="#__codelineno-0-245">245</a></span>
+<span class="normal"><a href="#__codelineno-0-246">246</a></span>
+<span class="normal"><a href="#__codelineno-0-247">247</a></span>
+<span class="normal"><a href="#__codelineno-0-248">248</a></span>
+<span class="normal"><a href="#__codelineno-0-249">249</a></span>
+<span class="normal"><a href="#__codelineno-0-250">250</a></span>
+<span class="normal"><a href="#__codelineno-0-251">251</a></span>
+<span class="normal"><a href="#__codelineno-0-252">252</a></span>
+<span class="normal"><a href="#__codelineno-0-253">253</a></span>
+<span class="normal"><a href="#__codelineno-0-254">254</a></span>
+<span class="normal"><a href="#__codelineno-0-255">255</a></span>
+<span class="normal"><a href="#__codelineno-0-256">256</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="k">def</span><span class="w"> </span><span class="nf">recognize_many</span><span class="p">(</span>
+<a id="__codelineno-0-225" name="__codelineno-0-225"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-226" name="__codelineno-0-226"></a>    <span class="n">images</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]],</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a>    <span class="n">max_concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">OCRResult</span><span class="p">]]:</span>
+<a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Recognize many inputs concurrently, with bounded parallelism.</span>
+<a id="__codelineno-0-230" name="__codelineno-0-230"></a>
+<a id="__codelineno-0-231" name="__codelineno-0-231"></a><span class="sd">    Runs [recognize()][natocr.OCR.recognize] across a thread pool. The</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a><span class="sd">    native engines release the GIL while doing the actual recognition, so</span>
+<a id="__codelineno-0-233" name="__codelineno-0-233"></a><span class="sd">    threads give real throughput on bulk jobs instead of plodding through</span>
+<a id="__codelineno-0-234" name="__codelineno-0-234"></a><span class="sd">    the inputs one at a time.</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a>
+<a id="__codelineno-0-236" name="__codelineno-0-236"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="sd">        images: an iterable of inputs, each one of the types</span>
+<a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">            [recognize()][natocr.OCR.recognize] accepts.</span>
+<a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">        max_concurrency: most inputs to process at once. Defaults to the</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a><span class="sd">            CPU count (never more workers than there are inputs).</span>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a>
+<a id="__codelineno-0-242" name="__codelineno-0-242"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="sd">        One result list per input, in the same order as ``images`` (each</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="sd">        element is itself a list of [OCRResult][natocr.OCRResult], one per</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a><span class="sd">        page - same shape [recognize()][natocr.OCR.recognize] returns).</span>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a>
+<a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">        ValueError: if ``max_concurrency`` is less than 1.</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-250" name="__codelineno-0-250"></a>    <span class="n">images</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+<a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a>        <span class="k">return</span> <span class="p">[]</span>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="n">workers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_concurrency</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="n">max_concurrency</span><span class="p">)</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="c1"># map preserves input order and re-raises the first failure on iteration</span>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a>        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recognize</span><span class="p">,</span> <span class="n">images</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="natocr.OCR.arecognize" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">arecognize</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#natocr.OCR.arecognize" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">arecognize</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OCRResult</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Awaitable <a class="autorefs autorefs-internal" title="recognize" href="#natocr.OCR.recognize">recognize()</a> for one input.</p>
+<p>Offloads the blocking native call to a worker thread so it doesn't stall
+the event loop - handy inside FastAPI or any async server.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>image</code>
+            </td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[<span title="str">str</span>, <span title="PIL.Image.Image">Image</span>, <span title="numpy.ndarray">ndarray</span>, <span title="bytes">bytes</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>same inputs <a class="autorefs autorefs-internal" title="recognize" href="#natocr.OCR.recognize">recognize()</a> accepts.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="natocr.OCRResult
+
+
+  
+      dataclass
+   (natocr.models.OCRResult)" href="#natocr.OCRResult">OCRResult</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>One <a class="autorefs autorefs-internal" title="natocr.OCRResult
+
+
+  
+      dataclass
+  " href="#natocr.OCRResult">OCRResult</a> per page, in page order.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>natocr/core.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-258">258</a></span>
+<span class="normal"><a href="#__codelineno-0-259">259</a></span>
+<span class="normal"><a href="#__codelineno-0-260">260</a></span>
+<span class="normal"><a href="#__codelineno-0-261">261</a></span>
+<span class="normal"><a href="#__codelineno-0-262">262</a></span>
+<span class="normal"><a href="#__codelineno-0-263">263</a></span>
+<span class="normal"><a href="#__codelineno-0-264">264</a></span>
+<span class="normal"><a href="#__codelineno-0-265">265</a></span>
+<span class="normal"><a href="#__codelineno-0-266">266</a></span>
+<span class="normal"><a href="#__codelineno-0-267">267</a></span>
+<span class="normal"><a href="#__codelineno-0-268">268</a></span>
+<span class="normal"><a href="#__codelineno-0-269">269</a></span>
+<span class="normal"><a href="#__codelineno-0-270">270</a></span>
+<span class="normal"><a href="#__codelineno-0-271">271</a></span>
+<span class="normal"><a href="#__codelineno-0-272">272</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-258" name="__codelineno-0-258"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">arecognize</span><span class="p">(</span>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+<a id="__codelineno-0-260" name="__codelineno-0-260"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">OCRResult</span><span class="p">]:</span>
+<a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Awaitable [recognize()][natocr.OCR.recognize] for one input.</span>
+<a id="__codelineno-0-262" name="__codelineno-0-262"></a>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="sd">    Offloads the blocking native call to a worker thread so it doesn&#39;t stall</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="sd">    the event loop - handy inside FastAPI or any async server.</span>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">        image: same inputs [recognize()][natocr.OCR.recognize] accepts.</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a>
+<a id="__codelineno-0-269" name="__codelineno-0-269"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-270" name="__codelineno-0-270"></a><span class="sd">        One [OCRResult][natocr.OCRResult] per page, in page order.</span>
+<a id="__codelineno-0-271" name="__codelineno-0-271"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-272" name="__codelineno-0-272"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recognize</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="natocr.OCR.arecognize_many" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">arecognize_many</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#natocr.OCR.arecognize_many" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">arecognize_many</span><span class="p">(</span><span class="n">images</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]],</span> <span class="n">max_concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">OCRResult</span><span class="p">]]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Awaitable <a class="autorefs autorefs-internal" title="recognize_many" href="#natocr.OCR.recognize_many">recognize_many()</a>.</p>
+<p>Same bounded-concurrency fan-out, but the blocking work runs on threads
+off the event loop so the calling coroutine stays responsive.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>images</code>
+            </td>
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="typing.Union">Union</span>[<span title="str">str</span>, <span title="PIL.Image.Image">Image</span>, <span title="numpy.ndarray">ndarray</span>, <span title="bytes">bytes</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>an iterable of inputs, each one of the types
+<a class="autorefs autorefs-internal" title="recognize" href="#natocr.OCR.recognize">recognize()</a> accepts.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_concurrency</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>most inputs to process at once. Defaults to the
+CPU count (never more workers than there are inputs).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.List">List</span>[<span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="natocr.OCRResult
+
+
+  
+      dataclass
+   (natocr.models.OCRResult)" href="#natocr.OCRResult">OCRResult</a>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>One result list per input, in the same order as <code>images</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>if <code>max_concurrency</code> is less than 1.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>natocr/core.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-274">274</a></span>
+<span class="normal"><a href="#__codelineno-0-275">275</a></span>
+<span class="normal"><a href="#__codelineno-0-276">276</a></span>
+<span class="normal"><a href="#__codelineno-0-277">277</a></span>
+<span class="normal"><a href="#__codelineno-0-278">278</a></span>
+<span class="normal"><a href="#__codelineno-0-279">279</a></span>
+<span class="normal"><a href="#__codelineno-0-280">280</a></span>
+<span class="normal"><a href="#__codelineno-0-281">281</a></span>
+<span class="normal"><a href="#__codelineno-0-282">282</a></span>
+<span class="normal"><a href="#__codelineno-0-283">283</a></span>
+<span class="normal"><a href="#__codelineno-0-284">284</a></span>
+<span class="normal"><a href="#__codelineno-0-285">285</a></span>
+<span class="normal"><a href="#__codelineno-0-286">286</a></span>
+<span class="normal"><a href="#__codelineno-0-287">287</a></span>
+<span class="normal"><a href="#__codelineno-0-288">288</a></span>
+<span class="normal"><a href="#__codelineno-0-289">289</a></span>
+<span class="normal"><a href="#__codelineno-0-290">290</a></span>
+<span class="normal"><a href="#__codelineno-0-291">291</a></span>
+<span class="normal"><a href="#__codelineno-0-292">292</a></span>
+<span class="normal"><a href="#__codelineno-0-293">293</a></span>
+<span class="normal"><a href="#__codelineno-0-294">294</a></span>
+<span class="normal"><a href="#__codelineno-0-295">295</a></span>
+<span class="normal"><a href="#__codelineno-0-296">296</a></span>
+<span class="normal"><a href="#__codelineno-0-297">297</a></span>
+<span class="normal"><a href="#__codelineno-0-298">298</a></span>
+<span class="normal"><a href="#__codelineno-0-299">299</a></span>
+<span class="normal"><a href="#__codelineno-0-300">300</a></span>
+<span class="normal"><a href="#__codelineno-0-301">301</a></span>
+<span class="normal"><a href="#__codelineno-0-302">302</a></span>
+<span class="normal"><a href="#__codelineno-0-303">303</a></span>
+<span class="normal"><a href="#__codelineno-0-304">304</a></span>
+<span class="normal"><a href="#__codelineno-0-305">305</a></span>
+<span class="normal"><a href="#__codelineno-0-306">306</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">arecognize_many</span><span class="p">(</span>
+<a id="__codelineno-0-275" name="__codelineno-0-275"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-276" name="__codelineno-0-276"></a>    <span class="n">images</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]],</span>
+<a id="__codelineno-0-277" name="__codelineno-0-277"></a>    <span class="n">max_concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-278" name="__codelineno-0-278"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">OCRResult</span><span class="p">]]:</span>
+<a id="__codelineno-0-279" name="__codelineno-0-279"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Awaitable [recognize_many()][natocr.OCR.recognize_many].</span>
+<a id="__codelineno-0-280" name="__codelineno-0-280"></a>
+<a id="__codelineno-0-281" name="__codelineno-0-281"></a><span class="sd">    Same bounded-concurrency fan-out, but the blocking work runs on threads</span>
+<a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="sd">    off the event loop so the calling coroutine stays responsive.</span>
+<a id="__codelineno-0-283" name="__codelineno-0-283"></a>
+<a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="sd">        images: an iterable of inputs, each one of the types</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="sd">            [recognize()][natocr.OCR.recognize] accepts.</span>
+<a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="sd">        max_concurrency: most inputs to process at once. Defaults to the</span>
+<a id="__codelineno-0-288" name="__codelineno-0-288"></a><span class="sd">            CPU count (never more workers than there are inputs).</span>
+<a id="__codelineno-0-289" name="__codelineno-0-289"></a>
+<a id="__codelineno-0-290" name="__codelineno-0-290"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="sd">        One result list per input, in the same order as ``images``.</span>
+<a id="__codelineno-0-292" name="__codelineno-0-292"></a>
+<a id="__codelineno-0-293" name="__codelineno-0-293"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-294" name="__codelineno-0-294"></a><span class="sd">        ValueError: if ``max_concurrency`` is less than 1.</span>
+<a id="__codelineno-0-295" name="__codelineno-0-295"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-296" name="__codelineno-0-296"></a>    <span class="n">images</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+<a id="__codelineno-0-297" name="__codelineno-0-297"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
+<a id="__codelineno-0-298" name="__codelineno-0-298"></a>        <span class="k">return</span> <span class="p">[]</span>
+<a id="__codelineno-0-299" name="__codelineno-0-299"></a>    <span class="n">workers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_concurrency</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="n">max_concurrency</span><span class="p">)</span>
+<a id="__codelineno-0-300" name="__codelineno-0-300"></a>    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+<a id="__codelineno-0-301" name="__codelineno-0-301"></a>    <span class="c1"># gather keeps input order; the pool bounds how many run at once</span>
+<a id="__codelineno-0-302" name="__codelineno-0-302"></a>    <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+<a id="__codelineno-0-303" name="__codelineno-0-303"></a>        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-0-304" name="__codelineno-0-304"></a>            <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recognize</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span> <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">images</span>
+<a id="__codelineno-0-305" name="__codelineno-0-305"></a>        <span class="p">]</span>
+<a id="__codelineno-0-306" name="__codelineno-0-306"></a>        <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

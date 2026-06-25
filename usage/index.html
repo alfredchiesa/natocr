@@ -443,6 +443,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#batch-and-async" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch and async
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Batch and async">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#awaitable-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Awaitable variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#supported-file-formats" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -683,6 +711,34 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#batch-and-async" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch and async
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Batch and async">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#awaitable-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Awaitable variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -990,6 +1046,49 @@ in memory:</p>
 </tr>
 </tbody>
 </table>
+<h2 id="batch-and-async">Batch and async<a class="headerlink" href="#batch-and-async" title="Permanent link">&para;</a></h2>
+<p><code>recognize()</code> does one input at a time. When you've got a pile of images to get
+through, <code>recognize_many()</code> runs them concurrently with a worker pool. The native
+engines (Vision, Windows Runtime OCR) let go of the GIL while they're actually
+recognizing, so this is real parallelism, not just busywork - bulk jobs finish a
+lot quicker than looping <code>recognize()</code> yourself:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;page1.png&quot;</span><span class="p">,</span> <span class="s2">&quot;page2.png&quot;</span><span class="p">,</span> <span class="s2">&quot;page3.png&quot;</span><span class="p">]</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">results</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">recognize_many</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">max_concurrency</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">for</span> <span class="n">pages</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>          <span class="c1"># one entry per input, in the order you passed them</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">pages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>       <span class="c1"># each entry is itself a list of pages, like recognize()</span>
+</code></pre></div>
+<p>It takes the same inputs <code>recognize()</code> does (paths, PIL images, numpy arrays,
+bytes - mix them freely), keeps everything in order, and <code>max_concurrency</code>
+defaults to the CPU count if you leave it off.</p>
+<h3 id="awaitable-variants">Awaitable variants<a class="headerlink" href="#awaitable-variants" title="Permanent link">&para;</a></h3>
+<p>There's <code>async</code>/<code>await</code> versions too, so OCR doesn't block your event loop. Handy
+when you're calling natocr from inside FastAPI or any async server - the request
+handler stays responsive while the recognition runs on a worker thread:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ocr</span><span class="o">.</span><span class="n">arecognize</span><span class="p">(</span><span class="s2">&quot;page.png&quot;</span><span class="p">)</span>     <span class="c1"># one input</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ocr</span><span class="o">.</span><span class="n">arecognize_many</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>     <span class="c1"># many, concurrently</span>
+</code></pre></div>
+<p><code>arecognize()</code> and <code>arecognize_many()</code> mirror their sync siblings exactly - same
+inputs, same return shape, same ordering - they just hand the blocking native
+call off to a thread so your coroutine keeps moving.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">UploadFile</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">natocr</span><span class="w"> </span><span class="kn">import</span> <span class="n">OCR</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="n">ocr</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">()</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/ocr&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_image</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="n">UploadFile</span><span class="p">):</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="n">pages</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ocr</span><span class="o">.</span><span class="n">arecognize</span><span class="p">(</span><span class="k">await</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">pages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">}</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This works the same on macOS and Windows. On Windows each worker spins up its
+own event loop for the engine's async call, so concurrent recognition is safe
+out of the box - nothing extra to set up.</p>
+</div>
 <h2 id="supported-file-formats">Supported file formats<a class="headerlink" href="#supported-file-formats" title="Permanent link">&para;</a></h2>
 <p>Images are decoded with <a href="https://python-pillow.org/">Pillow</a>, so any raster
 format Pillow can open works as an input file or byte string. HEIC/HEIF decoding
@@ -1091,15 +1190,15 @@ works out of the box with no extra dependencies.</p>
 <h3 id="jpeg-xl-and-jpeg-xr">JPEG XL and JPEG XR<a class="headerlink" href="#jpeg-xl-and-jpeg-xr" title="Permanent link">&para;</a></h3>
 <p>These two are optional because their decoders are extra dependencies. Install
 the <code>extras</code> group to enable them:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>extras<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>extras<span class="o">]</span>
 </code></pre></div>
 <p>That pulls in
 <a href="https://github.com/inflation/pillow-jxl-plugin">pillow-jxl-plugin</a> for <code>.jxl</code>
 and <a href="https://github.com/cgohlke/imagecodecs">imagecodecs</a> for
 <code>.jxr</code>/<code>.wdp</code>/<code>.hdp</code>. Once installed, both decode through the same <code>recognize()</code>
 call as every other format - no extra code:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;scan.jxl&quot;</span><span class="p">)</span>              <span class="c1"># JPEG XL</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;photo.jxr&quot;</span><span class="p">)</span>             <span class="c1"># JPEG XR / HD Photo</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;scan.jxl&quot;</span><span class="p">)</span>              <span class="c1"># JPEG XL</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;photo.jxr&quot;</span><span class="p">)</span>             <span class="c1"># JPEG XR / HD Photo</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1111,12 +1210,12 @@ require it.</p>
 <p>DjVu (<code>.djvu</code>, <code>.djv</code>) is a format built for scanned text documents. Its decoder,
 <a href="https://pypi.org/project/djvulibre-python/">python-djvulibre</a>, is part of the
 <code>extras</code> group:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>extras<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pip<span class="w"> </span>install<span class="w"> </span>natocr<span class="o">[</span>extras<span class="o">]</span>
 </code></pre></div>
 <p>It also needs the system <strong>djvulibre</strong> library it builds against - this is the
 library python-djvulibre links to, and it isn't installable with <code>pip</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>brew<span class="w"> </span>install<span class="w"> </span>djvulibre<span class="w">             </span><span class="c1"># macOS</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libdjvulibre-dev<span class="w">  </span><span class="c1"># Debian/Ubuntu</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>brew<span class="w"> </span>install<span class="w"> </span>djvulibre<span class="w">             </span><span class="c1"># macOS</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libdjvulibre-dev<span class="w">  </span><span class="c1"># Debian/Ubuntu</span>
 </code></pre></div>
 <p>On Windows, install <a href="https://djvu.sourceforge.net/">DjVuLibre</a> so its DLLs are on
 <code>PATH</code>. Once set up, DjVu decodes through the same <code>recognize()</code> call as any other
@@ -1134,11 +1233,11 @@ breaks.</p>
 <a href="../api/#natocr.OCRResult"><code>OCRResult</code></a> per page, in order. The formats that can
 carry more than one frame/page are <strong>DjVu</strong>, <strong>multi-page TIFF</strong>, <strong>animated
 GIF</strong>, <strong>animated PNG</strong>, and <strong>multi-image HEIC/HEIF</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">ocr</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">()</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">page</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;scan.djvu&quot;</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- page </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">ocr</span> <span class="o">=</span> <span class="n">OCR</span><span class="p">()</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">page</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ocr</span><span class="o">.</span><span class="n">recognize</span><span class="p">(</span><span class="s2">&quot;scan.djvu&quot;</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- page </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
 <p>Single-page inputs (PNG, JPEG, ...) return a one-element list, so the same loop
 works for everything - or just grab <code>recognize(...)[0]</code>.</p>
@@ -1152,18 +1251,18 @@ supported formats first (e.g. with <code>pdf2image</code> or <code>pymupdf</code
 <p>The test suite mocks the native macOS Vision and Windows Runtime backends, so it
 runs on any platform without those frameworks installed.</p>
 <p>Set up a virtualenv and install the dev extras:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </code></pre></div>
 <p>Run the full suite (coverage is configured in <code>pyproject.toml</code>, so it runs by
 default):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pytest
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>pytest
 </code></pre></div>
 <p>Targeted runs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>pytest<span class="w"> </span>tests/test_ocr.py<span class="w">     </span><span class="c1"># one file</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>pytest<span class="w"> </span>-k<span class="w"> </span>convert<span class="w">            </span><span class="c1"># match tests by name</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>pytest<span class="w"> </span>-v<span class="w">                    </span><span class="c1"># verbose</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>pytest<span class="w"> </span>tests/test_ocr.py<span class="w">     </span><span class="c1"># one file</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>pytest<span class="w"> </span>-k<span class="w"> </span>convert<span class="w">            </span><span class="c1"># match tests by name</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>pytest<span class="w"> </span>-v<span class="w">                    </span><span class="c1"># verbose</span>
 </code></pre></div>
 <p>Coverage output is printed to the terminal and written to <code>htmlcov/index.html</code>
 and <code>coverage.xml</code>.</p>
