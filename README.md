@@ -9,6 +9,14 @@ than third-party alternatives like Tesseract. **natocr** makes reaching for them
 painless via one clean Python API instead of wrangling with Objective-C bridges 
 or WinRT async plumbing.
 
+## Updates
+
+- **v2.0.0** (2026-06-25) - batch & async support: [`recognize_many()`](#batch-and-async) plus awaitable `arecognize()` / `arecognize_many()` for concurrent, non-blocking OCR
+- **v1.6.1** (2026-06-04) - animated PNG and multi-image HEIF support
+- **v1.6.0** (2026-06-04) - multi-page documents and DjVu support
+- **v1.5.0** (2026-06-04) - JPEG 2000, JPEG XL, and JPEG XR / HD Photo support
+- **v1.4.0** (2026-06-04) - HEIC / HEIF (iPhone photo) support
+
 ## Install
 
 ```bash
