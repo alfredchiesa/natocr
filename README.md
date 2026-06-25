@@ -11,7 +11,8 @@ or WinRT async plumbing.
 
 ## Notable Updates
 
-- **v2.0.0** (2026-06-25) - batch & async support: [`recognize_many()`](#batch-and-async) plus awaitable [`arecognize()`](#batch-and-async) / [`arecognize_many()`](#batch-and-async) for concurrent, non-blocking OCR
+- **v2.1.0** (2026-06-25) - confidence helpers and line + paragraph aggregation
+- **v2.0.0** (2026-06-22) - batch & async support: [`recognize_many()`](#batch-and-async) plus awaitable [`arecognize()`](#batch-and-async) / [`arecognize_many()`](#batch-and-async) for concurrent, non-blocking OCR
 - **v1.6.1** (2026-06-04) - animated PNG and multi-image HEIF support
 - **v1.6.0** (2026-06-04) - multi-page documents and DjVu support
 - **v1.5.0** (2026-06-04) - JPEG 2000, JPEG XL, and JPEG XR / HD Photo support

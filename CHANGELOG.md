@@ -18,7 +18,7 @@
   ([`95893ad`](https://github.com/alfredchiesa/natocr/commit/95893ade425316bf2459ca7262bc45c4d08c10ce))
 
 
-## v2.0.0 (2026-06-25)
+## v2.0.0 (2026-06-22)
 
 ### Features
 
