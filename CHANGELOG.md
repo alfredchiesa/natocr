@@ -2,6 +2,27 @@
 
 <!-- version list -->
 
+## v2.1.1 (2026-06-26)
+
+### Bug Fixes
+
+- Updates `.gitignore`
+  ([`9fcc423`](https://github.com/alfredchiesa/natocr/commit/9fcc423f807e2fd7723a1b66342e891933fb9e8a))
+
+### Chores
+
+- Cleans up `README.md`
+  ([`20c0591`](https://github.com/alfredchiesa/natocr/commit/20c059153af1313b068b16258fb8bb82c8975802))
+
+- Updates update
+  ([`24b3fd0`](https://github.com/alfredchiesa/natocr/commit/24b3fd027edc07ed877241ba4efe194667477ad5))
+
+### Documentation
+
+- Cleans up format and adds more examples
+  ([`45e7bb1`](https://github.com/alfredchiesa/natocr/commit/45e7bb18cc10cbcb9f761c713ddb9ddd7f2427aa))
+
+
 ## v2.1.0 (2026-06-25)
 
 ### Features
