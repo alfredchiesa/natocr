@@ -23,8 +23,7 @@ or WinRT async plumbing.
 ```bash
 pip install natocr
 
-# for JPEG XL, JPEG XR & DjVu support
-pip install natocr[extras]
+pip install natocr[extras]                # for JPEG XL, JPEG XR & DjVu support
 ```
 
 The right native backend (Vision on macOS, Windows Runtime OCR on Windows) is
@@ -39,8 +38,8 @@ pyright, and your editor pick up the hints with no stubs needed.
 ```python
 from natocr import OCR
 
-ocr = OCR()                            # defaults to english
-pages = ocr.recognize("invoice.png")   # one OCRResult per page
+ocr = OCR()                               # defaults to english
+pages = ocr.recognize("invoice.png")      # one OCRResult per page
 
 print(pages[0].text)
 ```
@@ -54,26 +53,107 @@ are a single page, so you'll often just read `pages[0]`; multi-page/multi-frame
 inputs (DjVu, TIFF, GIF, animated PNG, multi-image HEIC/HEIF) give one result per
 frame (see [Multi-page documents](#multi-page-documents)).
 
+### Examples
+
+#### Lines and paragraphs
+
+```python
+from natocr import OCR
+
+ocr = OCR()
+page = ocr.recognize("cosmos.png")[0]
+
+for line in page.lines:                   # plain strings, top to bottom
+    print(line)
+
+for para in page.paragraphs:              # blocks, with averaged confidence
+    print(round(para.confidence or 0, 2), para.text)
+```
+
+```text
+We are made of star stuff.
+0.97 We are made of star stuff.
+```
+
+#### Multi-page documents
+
+```python
+# one result per page - tiff, djvu, animated gif/png, multi-image heic
+for i, page in enumerate(ocr.recognize("pale-blue-dot.tiff"), start=1):
+    print(f"--- page {i} ---")
+    print(page.text)
+```
+
+#### Batch processing
+
+```python
+# many files at once, bounded concurrency, results stay in input order
+shots = ["cosmos-01.png", "cosmos-02.png", "cosmos-03.png"]
+for pages in ocr.recognize_many(shots, max_concurrency=4):
+    print(pages[0].text)
+```
+
+#### Async (non-blocking)
+
+```python
+import asyncio
+from natocr import OCR
+
+ocr = OCR()
+
+async def main():
+    # offloaded to a worker thread, so the event loop keeps moving
+    page = (await ocr.arecognize("contact.png"))[0]
+    print(page.text)
+
+    # or a whole batch concurrently
+    pages = await ocr.arecognize_many(["frame1.png", "frame2.png"])
+    print([p[0].text for p in pages])
+
+asyncio.run(main())
+```
+
+#### PDFs
+
+natocr currently reads images, not PDFs - rasterize each page first (here with
+[pymupdf](https://pymupdf.readthedocs.io/)), then hand the frames straight to
+`recognize_many()`:
+
+```python
+import fitz  # pymupdf
+from natocr import OCR
+
+ocr = OCR()
+
+# render each pdf page to png bytes at 200 dpi
+doc = fitz.open("pale-blue-dot.pdf")
+rendered = [p.get_pixmap(dpi=200).tobytes("png") for p in doc]
+
+# scan them all in one bulk call
+for pages in ocr.recognize_many(rendered):
+    print(pages[0].text)
+```
+
 ### Confidence Scores and Bounding Boxes
 
 Beyond the flat `.text`, each `OCRResult` carries a per-detection breakdown with
 bounding boxes and (*on macOS*) confidence scores:
 
 ```python
-page = ocr.recognize("receipt.png")[0]   # first (often only) page
+page = ocr.recognize("receipt.png")[0]    # first (often only) page
 
-print(page.confidence)                   # avg confidence, or None
+print(page.confidence)                    # avg confidence, or None
 
 for element in page.elements:
-    box = element.bounds.bounds          # (x, y, width, height) in pixels
+    box = element.bounds.bounds           # (x, y, width, height) in pixels
     print(f"{element.text!r} @ {box} conf={element.confidence}")
 ```
 
 ```text
 0.93
-'Acme Coffee' @ (24.0, 18.0, 180.0, 32.0) conf=0.97
-'Latte' @ (24.0, 70.0, 96.0, 28.0) conf=0.95
-'$4.50' @ (220.0, 70.0, 80.0, 28.0) conf=0.88
+'Carl Sagan' @ (24.0, 18.0, 180.0, 32.0) conf=0.97
+'Chilly Willy' @ (24.0, 70.0, 96.0, 28.0) conf=0.95
+'$420' @ (220.0, 70.0, 80.0, 28.0) conf=0.88
 ```
 
 ### Lines and Words
@@ -81,7 +161,7 @@ for element in page.elements:
 There's also convenience views for grouping a page by reading order:
 
 ```python
-page.lines      # ['Acme Coffee', 'Latte $4.50']  - elements grouped into lines
+page.lines      # ['Carl Sagan', 'Chilly Willy $240'] - grouped into lines
 page.words      # list of TextElement with non-empty text
 ```
 
@@ -104,7 +184,7 @@ Drop the low-confidence noise with `filter()` - it hands back a new `OCRResult`
 keeping only detections at or above the threshold:
 
 ```python
-clean = page.filter(0.8)               # only elements >= 0.8 confidence
+clean = page.filter(0.8)                  # only elements >= 0.8 confidence
 print(clean.text)
 ```
 
