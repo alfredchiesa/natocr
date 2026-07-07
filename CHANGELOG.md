@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.2.1 (2026-07-07)
+
+### Bug Fixes
+
+- Updates doc formatting + adds contribution guide
+  ([`ea6b88d`](https://github.com/alfredchiesa/natocr/commit/ea6b88d6da120d62dc9a46fc9c5d99cdd2171c2c))
+
+
 ## v2.2.0 (2026-07-07)
 
 ### Features
