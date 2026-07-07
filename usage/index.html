@@ -16,7 +16,7 @@
         <link rel="prev" href="..">
       
       
-        <link rel="next" href="../api/">
+        <link rel="next" href="../cli/">
       
       
         
@@ -613,6 +613,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command line
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../api/" class="md-nav__link">
         
   
@@ -958,8 +985,8 @@ boxes and (on macOS) confidence scores:</p>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">text</span><span class="si">!r}</span><span class="s2"> @ </span><span class="si">{</span><span class="n">box</span><span class="si">}</span><span class="s2"> conf=</span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">confidence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>0.93
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>&#39;Acme Coffee&#39; @ (24.0, 18.0, 180.0, 32.0) conf=0.97
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>&#39;Latte&#39; @ (24.0, 70.0, 96.0, 28.0) conf=0.95
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>&#39;Cosmos Coffee&#39; @ (24.0, 18.0, 180.0, 32.0) conf=0.97
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>&#39;Sagano&#39; @ (24.0, 70.0, 96.0, 28.0) conf=0.95
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>&#39;$4.50&#39; @ (220.0, 70.0, 80.0, 28.0) conf=0.88
 </code></pre></div>
 <div class="admonition note">
@@ -971,7 +998,7 @@ unavailable.</p>
 </div>
 <h2 id="lines-and-words">Lines and words<a class="headerlink" href="#lines-and-words" title="Permanent link">&para;</a></h2>
 <p>Convenience views group a page by reading order:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">page</span><span class="o">.</span><span class="n">lines</span>      <span class="c1"># [&#39;Acme Coffee&#39;, &#39;Latte $4.50&#39;]  - elements grouped into lines</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">page</span><span class="o">.</span><span class="n">lines</span>      <span class="c1"># [&#39;Cosmos Coffee&#39;, &#39;Sagano $4.50&#39;]  - elements grouped into lines</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">page</span><span class="o">.</span><span class="n">words</span>      <span class="c1"># list of TextElement with non-empty text</span>
 </code></pre></div>
 <h3 id="line-and-paragraph-confidence">Line and paragraph confidence<a class="headerlink" href="#line-and-paragraph-confidence" title="Permanent link">&para;</a></h3>
@@ -1399,6 +1426,10 @@ and <code>coverage.xml</code>.</p>
 <tr>
 <td><code>tests/test_ocr.py</code></td>
 <td>the <code>OCR</code> facade and platform detection in <code>core.py</code></td>
+</tr>
+<tr>
+<td><code>tests/test_cli.py</code></td>
+<td>the <code>natocr</code> command line interface (backend mocked)</td>
 </tr>
 <tr>
 <td><code>tests/test_macos.py</code></td>
