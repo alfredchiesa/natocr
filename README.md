@@ -253,6 +253,41 @@ results = await ocr.arecognize_many(paths)       # many, concurrently
 `arecognize()` / `arecognize_many()` offload the blocking native call to a
 worker thread, so the calling coroutine stays responsive.
 
+## Command Line
+
+natocr ships an optional CLI, so shell pipelines and non-Python users get the
+same native OCR. It's an extra to keep library-only installs lean:
+
+```bash
+pip install 'natocr[cli]'
+```
+
+```bash
+natocr scan.png                            # print the recognized text
+natocr scan.png -f table                   # pretty per-line table with confidence
+natocr scan.png -f json | jq -r '.pages[].text'
+natocr photo.jpg --lang fr                 # recognize french text
+natocr 'scans/*.tiff' -f pdf -o out/       # searchable pdfs, one per input
+cat scan.png | natocr -                    # read the image from stdin
+natocr --list-languages                    # languages this machine supports
+```
+
+Pick the output with `-f/--format`:
+
+| Format | What you get |
+| --- | --- |
+| `text` (default) | plain text; multi-page inputs separate pages with a form feed |
+| `table` | a colorized per-line table (text, confidence, bounds) for humans |
+| `json` | one JSON object per input (NDJSON) with text, lines, confidences, and bounding boxes |
+| `hocr` | hOCR XHTML with per-word boxes - the standard interchange format for OCR layout |
+| `pdf` | searchable PDF - the page image with an invisible text layer, like tesseract's |
+
+`--min-confidence 0.8` drops low-confidence detections, `-o` writes to a file
+(or a directory when there are multiple inputs), batches get a progress bar on
+stderr, and `python -m natocr` works anywhere the package is importable. Run
+`natocr --help` for the full reference, or see the
+[CLI guide](https://alfredchiesa.github.io/natocr/cli/) for examples.
+
 ## Supported File Types
 
 Images are decoded with [Pillow](https://python-pillow.org/), so any raster

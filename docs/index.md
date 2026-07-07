@@ -53,8 +53,8 @@ for element in page.elements:
 ```
 
 ```text
-'Acme Coffee' @ (24.0, 18.0, 180.0, 32.0) conf=0.97
-'Latte' @ (24.0, 70.0, 96.0, 28.0) conf=0.95
+'Cosmos Coffee' @ (24.0, 18.0, 180.0, 32.0) conf=0.97
+'Sagano' @ (24.0, 70.0, 96.0, 28.0) conf=0.95
 '$4.50' @ (220.0, 70.0, 80.0, 28.0) conf=0.88
 ```
 
@@ -78,5 +78,7 @@ Overall confidence: 0.93
 
 - **[Usage](usage.md)** - confidence scores, bounding boxes, languages,
   accepted input types, supported file formats, and how to run the tests.
+- **[Command line](cli.md)** - the optional `natocr` command: text, tables,
+  JSON, hOCR, and searchable PDF output straight from the shell.
 - **[API Reference](api.md)** - the full `OCR` / `OCRResult` / `TextElement` /
   `BoundingBox` reference, generated from the source.

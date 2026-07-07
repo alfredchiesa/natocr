@@ -44,6 +44,12 @@ extras = [
     "imagecodecs>=2024.1.1",
     "djvulibre-python>=0.9.3",
 ]
+# the natocr command's dependencies; the entry point itself is always
+# installed and points at this extra when they're missing
+cli = [
+    "typer>=0.12",
+    "rich>=13.0",
+]
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
@@ -51,7 +57,12 @@ dev = [
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.6.21",
     "mkdocstrings[python]>=0.26",
+    "typer>=0.12",
+    "rich>=13.0",
 ]
+
+[project.scripts]
+natocr = "natocr.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/alfredchiesa/natocr"

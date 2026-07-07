@@ -40,8 +40,8 @@ for element in page.elements:
 
 ```text
 0.93
-'Acme Coffee' @ (24.0, 18.0, 180.0, 32.0) conf=0.97
-'Latte' @ (24.0, 70.0, 96.0, 28.0) conf=0.95
+'Cosmos Coffee' @ (24.0, 18.0, 180.0, 32.0) conf=0.97
+'Sagano' @ (24.0, 70.0, 96.0, 28.0) conf=0.95
 '$4.50' @ (220.0, 70.0, 80.0, 28.0) conf=0.88
 ```
 
@@ -56,7 +56,7 @@ for element in page.elements:
 Convenience views group a page by reading order:
 
 ```python
-page.lines      # ['Acme Coffee', 'Latte $4.50']  - elements grouped into lines
+page.lines      # ['Cosmos Coffee', 'Sagano $4.50']  - elements grouped into lines
 page.words      # list of TextElement with non-empty text
 ```
 
@@ -414,6 +414,7 @@ and `coverage.xml`.
 | --- | --- |
 | `tests/test_models.py` | data models (`BoundingBox`, `TextElement`, `OCRResult`) |
 | `tests/test_ocr.py` | the `OCR` facade and platform detection in `core.py` |
+| `tests/test_cli.py` | the `natocr` command line interface (backend mocked) |
 | `tests/test_macos.py` | the macOS Vision backend (Vision mocked) |
 | `tests/test_windows.py` | the Windows Runtime backend (winrt mocked) |
 | `tests/test_integration_macos.py` | real Vision end-to-end (runs on macOS, skips elsewhere) |
