@@ -412,3 +412,12 @@ pytest -v
 
 Coverage reports land in the terminal, in `htmlcov/index.html`, and in
 `coverage.xml`.
+
+## Contributing
+
+Contributions, issues, and feature requests are all welcome! Found a bug or
+have an idea? [Open an issue](https://github.com/alfredchiesa/natocr/issues).
+PRs are appreciated too - for bigger changes, it's worth opening an issue first
+so we can talk it through. Commit messages follow
+[Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`,
+`docs:`, ...), since releases are cut automatically from them.

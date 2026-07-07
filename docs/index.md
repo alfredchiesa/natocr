@@ -82,3 +82,10 @@ Overall confidence: 0.93
   JSON, hOCR, and searchable PDF output straight from the shell.
 - **[API Reference](api.md)** - the full `OCR` / `OCRResult` / `TextElement` /
   `BoundingBox` reference, generated from the source.
+
+## Contributing
+
+Contributions, issues, and feature requests are all welcome! Found a bug or
+have an idea? [Open an issue](https://github.com/alfredchiesa/natocr/issues) -
+and for bigger changes, open one first so we can talk it through before you
+start on a PR.
