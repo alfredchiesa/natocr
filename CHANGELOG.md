@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.2.0 (2026-07-07)
+
+### Features
+
+- Adds an optional command line interface
+  ([`b885ac3`](https://github.com/alfredchiesa/natocr/commit/b885ac3b37932375ee960d55119e86060b061c52))
+
+
 ## v2.1.1 (2026-06-26)
 
 ### Bug Fixes
