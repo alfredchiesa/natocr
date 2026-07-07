@@ -11,6 +11,7 @@ or WinRT async plumbing.
 
 ## Notable Updates
 
+- **v2.2.0** (2026-07-07) - optional command line interface
 - **v2.1.0** (2026-06-25) - confidence helpers and line + paragraph aggregation
 - **v2.0.0** (2026-06-22) - batch & non-blocking async support
 - **v1.6.1** (2026-06-04) - animated PNG and multi-image HEIF support
